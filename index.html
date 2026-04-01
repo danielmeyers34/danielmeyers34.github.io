@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Daniel Meyers — xeroc00l | Senior Full-Stack Developer & IT Consultant</title>
+<meta name="description" content="30 years of IT experience. Full-stack development, DevOps, Web3, and enterprise consulting.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0a0a;--bg-card:#111113;--bg-card-hover:#18181b;
+  --border:#1e1e22;--border-hover:#2a2a30;
+  --text:#e4e4e7;--text-muted:#71717a;--text-dim:#52525b;
+  --accent:#22d3ee;--accent-dim:rgba(34,211,238,.08);--accent-glow:rgba(34,211,238,.15);
+  --green:#34d399;--amber:#fbbf24;--red:#f87171;
+  --mono:'Space Mono',monospace;--sans:'Inter',system-ui,sans-serif;
+}
+html{scroll-behavior:smooth;background:var(--bg);color:var(--text)}
+body{font-family:var(--sans);line-height:1.6;overflow-x:hidden;
+  background-image:
+    linear-gradient(rgba(30,30,34,.4) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(30,30,34,.4) 1px,transparent 1px);
+  background-size:60px 60px;
+}
+
+/* --- Scrollbar --- */
+::-webkit-scrollbar{width:6px}
+::-webkit-scrollbar-track{background:var(--bg)}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px}
+
+/* --- Layout --- */
+.container{max-width:1100px;margin:0 auto;padding:0 24px}
+section{padding:100px 0}
+
+/* --- Animations --- */
+.reveal{opacity:0;transform:translateY(30px);transition:opacity .6s ease,transform .6s ease}
+.reveal.visible{opacity:1;transform:translateY(0)}
+.reveal-delay-1{transition-delay:.1s}
+.reveal-delay-2{transition-delay:.2s}
+.reveal-delay-3{transition-delay:.3s}
+.reveal-delay-4{transition-delay:.4s}
+
+/* --- Nav --- */
+nav{position:fixed;top:0;left:0;right:0;z-index:100;
+  background:rgba(10,10,10,.85);backdrop-filter:blur(12px);border-bottom:1px solid var(--border)}
+nav .container{display:flex;align-items:center;justify-content:space-between;height:60px}
+.nav-logo{font-family:var(--mono);font-weight:700;font-size:1rem;color:var(--accent);text-decoration:none;letter-spacing:-.5px}
+.nav-logo span{color:var(--text-muted)}
+.nav-links{display:flex;gap:28px;list-style:none}
+.nav-links a{color:var(--text-muted);text-decoration:none;font-size:.85rem;font-weight:500;
+  transition:color .2s;letter-spacing:.3px;text-transform:uppercase}
+.nav-links a:hover{color:var(--text)}
+.nav-toggle{display:none;background:none;border:none;color:var(--text);cursor:pointer;font-size:1.4rem}
+
+/* --- Hero --- */
+#hero{min-height:100vh;display:flex;align-items:center;padding-top:60px}
+.hero-content{max-width:720px}
+.hero-label{font-family:var(--mono);font-size:.8rem;color:var(--accent);letter-spacing:2px;
+  text-transform:uppercase;margin-bottom:16px;display:flex;align-items:center;gap:8px}
+.hero-label::before{content:'';width:24px;height:1px;background:var(--accent)}
+h1{font-size:clamp(2.8rem,6vw,4.5rem);font-weight:900;line-height:1.05;letter-spacing:-2px;margin-bottom:20px}
+h1 .accent{color:var(--accent)}
+.hero-sub{font-size:1.15rem;color:var(--text-muted);max-width:540px;margin-bottom:36px;line-height:1.7}
+.hero-sub strong{color:var(--text);font-weight:600}
+.hero-btns{display:flex;gap:12px;flex-wrap:wrap}
+.btn{display:inline-flex;align-items:center;gap:8px;padding:12px 24px;border-radius:6px;
+  font-size:.9rem;font-weight:600;text-decoration:none;transition:all .2s;cursor:pointer;border:none}
+.btn-primary{background:var(--accent);color:var(--bg)}
+.btn-primary:hover{background:#06b6d4;transform:translateY(-1px)}
+.btn-outline{background:transparent;color:var(--text);border:1px solid var(--border)}
+.btn-outline:hover{border-color:var(--accent);color:var(--accent)}
+.hero-stats{display:flex;gap:40px;margin-top:48px;padding-top:32px;border-top:1px solid var(--border)}
+.stat-num{font-family:var(--mono);font-size:1.8rem;font-weight:700;color:var(--text)}
+.stat-label{font-size:.75rem;color:var(--text-muted);text-transform:uppercase;letter-spacing:1px;margin-top:2px}
+
+/* --- Section Headers --- */
+.section-label{font-family:var(--mono);font-size:.75rem;color:var(--accent);letter-spacing:2px;
+  text-transform:uppercase;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.section-label::before{content:'//';color:var(--text-dim)}
+h2{font-size:2.2rem;font-weight:800;letter-spacing:-1px;margin-bottom:16px}
+.section-desc{color:var(--text-muted);max-width:560px;margin-bottom:48px}
+
+/* --- About --- */
+.about-grid{display:grid;grid-template-columns:1fr 1fr;gap:32px}
+.about-text p{color:var(--text-muted);margin-bottom:16px;line-height:1.8}
+.about-text strong{color:var(--text);font-weight:600}
+.about-roles{display:flex;flex-direction:column;gap:16px}
+.role-card{background:var(--bg-card);border:1px solid var(--border);border-radius:8px;padding:20px;
+  transition:border-color .2s}
+.role-card:hover{border-color:var(--border-hover)}
+.role-title{font-weight:700;font-size:.95rem;margin-bottom:4px}
+.role-org{font-family:var(--mono);font-size:.8rem;color:var(--accent)}
+.role-desc{font-size:.85rem;color:var(--text-muted);margin-top:8px}
+
+/* --- Projects --- */
+.projects-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}
+.project-card{background:var(--bg-card);border:1px solid var(--border);border-radius:10px;
+  padding:28px;transition:all .3s;position:relative;overflow:hidden}
+.project-card:hover{border-color:var(--border-hover);background:var(--bg-card-hover);transform:translateY(-2px)}
+.project-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:12px}
+.project-icon{font-size:1.4rem}
+.project-status{display:flex;align-items:center;gap:5px;font-family:var(--mono);font-size:.7rem;
+  text-transform:uppercase;letter-spacing:.5px}
+.status-dot{width:7px;height:7px;border-radius:50%;display:inline-block}
+.status-live .status-dot{background:var(--green);box-shadow:0 0 8px var(--green)}
+.status-live{color:var(--green)}
+.status-dev .status-dot{background:var(--amber);box-shadow:0 0 8px var(--amber)}
+.status-dev{color:var(--amber)}
+.status-saas .status-dot{background:var(--accent);box-shadow:0 0 8px var(--accent)}
+.status-saas{color:var(--accent)}
+.project-name{font-size:1.15rem;font-weight:700;margin-bottom:8px}
+.project-desc{font-size:.85rem;color:var(--text-muted);line-height:1.7;margin-bottom:16px}
+.project-tags{display:flex;flex-wrap:wrap;gap:6px}
+.tag{font-family:var(--mono);font-size:.65rem;padding:4px 10px;border-radius:4px;
+  background:var(--accent-dim);color:var(--accent);letter-spacing:.3px;white-space:nowrap}
+.project-card.featured{grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:28px}
+.project-card.featured .project-details{display:flex;flex-direction:column;justify-content:center}
+.project-card.featured .project-features{display:flex;flex-direction:column;gap:8px}
+.feature-item{display:flex;align-items:center;gap:8px;font-size:.85rem;color:var(--text-muted)}
+.feature-item::before{content:'>';font-family:var(--mono);color:var(--accent);font-size:.75rem}
+
+/* --- Stack --- */
+.stack-grid{display:flex;flex-wrap:wrap;gap:10px;justify-content:center}
+.stack-badge{display:flex;align-items:center;gap:8px;background:var(--bg-card);
+  border:1px solid var(--border);border-radius:8px;padding:10px 18px;font-size:.85rem;
+  font-weight:500;transition:all .2s;cursor:default}
+.stack-badge:hover{border-color:var(--accent);background:var(--accent-dim);transform:translateY(-2px)}
+.stack-badge .badge-icon{font-size:1.1rem}
+
+/* --- Contact --- */
+#contact{text-align:center}
+.contact-box{background:var(--bg-card);border:1px solid var(--border);border-radius:12px;
+  padding:48px;max-width:600px;margin:0 auto}
+.contact-box h2{margin-bottom:12px}
+.contact-box p{color:var(--text-muted);margin-bottom:28px}
+.contact-links{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}
+
+/* --- Footer --- */
+footer{border-top:1px solid var(--border);padding:32px 0;text-align:center}
+footer p{font-family:var(--mono);font-size:.75rem;color:var(--text-dim)}
+
+/* --- Terminal block --- */
+.terminal{background:#0c0c0e;border:1px solid var(--border);border-radius:8px;overflow:hidden;margin-top:32px}
+.terminal-bar{display:flex;align-items:center;gap:6px;padding:10px 14px;border-bottom:1px solid var(--border)}
+.terminal-dot{width:10px;height:10px;border-radius:50%;background:var(--border)}
+.terminal-dot:nth-child(1){background:var(--red)}
+.terminal-dot:nth-child(2){background:var(--amber)}
+.terminal-dot:nth-child(3){background:var(--green)}
+.terminal-body{padding:16px 20px;font-family:var(--mono);font-size:.8rem;line-height:1.8;color:var(--text-muted)}
+.terminal-body .cmd{color:var(--green)}
+.terminal-body .flag{color:var(--accent)}
+.terminal-body .comment{color:var(--text-dim)}
+
+/* --- Mobile --- */
+@media(max-width:768px){
+  .nav-links{display:none;position:absolute;top:60px;left:0;right:0;background:rgba(10,10,10,.95);
+    flex-direction:column;padding:20px 24px;gap:16px;border-bottom:1px solid var(--border)}
+  .nav-links.open{display:flex}
+  .nav-toggle{display:block}
+  section{padding:64px 0}
+  h1{font-size:2.2rem;letter-spacing:-1px}
+  .hero-stats{gap:24px}
+  .stat-num{font-size:1.3rem}
+  .about-grid{grid-template-columns:1fr}
+  .projects-grid{grid-template-columns:1fr}
+  .project-card.featured{grid-template-columns:1fr}
+  .contact-box{padding:32px 20px}
+  .hero-btns{flex-direction:column}
+  .btn{justify-content:center}
+}
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav>
+  <div class="container">
+    <a href="#" class="nav-logo">xeroc00l<span>.org</span></a>
+    <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')" aria-label="Menu">&#9776;</button>
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#stack">Stack</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section id="hero">
+  <div class="container">
+    <div class="hero-content">
+      <div class="hero-label reveal">Full-Stack Developer & IT Consultant</div>
+      <h1 class="reveal reveal-delay-1">Daniel<br>Meyers<span class="accent">.</span></h1>
+      <p class="hero-sub reveal reveal-delay-2">
+        <strong>30 years</strong> building infrastructure that scales. From enterprise IT to
+        containerized microservices, Web3 trading platforms, and festival tech &mdash;
+        I architect systems that <strong>run without excuses</strong>.
+      </p>
+      <div class="hero-btns reveal reveal-delay-3">
+        <a href="https://github.com/xeroc00l" class="btn btn-primary" target="_blank">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          GitHub
+        </a>
+        <a href="#contact" class="btn btn-outline">Get in Touch</a>
+      </div>
+      <div class="hero-stats reveal reveal-delay-4">
+        <div><div class="stat-num">30+</div><div class="stat-label">Years Experience</div></div>
+        <div><div class="stat-num">5</div><div class="stat-label">Active Platforms</div></div>
+        <div><div class="stat-num">24/7</div><div class="stat-label">Production Uptime</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- About -->
+<section id="about">
+  <div class="container">
+    <div class="section-label reveal">About</div>
+    <h2 class="reveal">The short version<span class="accent">.</span></h2>
+    <div class="about-grid">
+      <div class="about-text reveal">
+        <p>
+          I've been deep in IT since the mid-90s. Started with bare metal, worked through
+          the cloud migration era, and now build <strong>containerized, event-driven systems</strong>
+          that run in production every day.
+        </p>
+        <p>
+          My current focus is the intersection of <strong>operations infrastructure</strong> and
+          <strong>live entertainment</strong> &mdash; building internal tools, trading bots, social platforms,
+          and e-commerce pipelines that keep real businesses moving.
+        </p>
+        <p>
+          I believe in shipping production code, not slide decks. Every project in my portfolio
+          is <strong>deployed and running</strong>.
+        </p>
+      </div>
+      <div class="about-roles reveal reveal-delay-1">
+        <div class="role-card">
+          <div class="role-title">Director of IT</div>
+          <div class="role-org">One N Only Entertainment</div>
+          <div class="role-desc">Full-stack infrastructure for EDM festival travel &mdash; e-commerce, dashboards, social apps, payment systems</div>
+        </div>
+        <div class="role-card">
+          <div class="role-title">IT Consultant</div>
+          <div class="role-org">Independent</div>
+          <div class="role-desc">Clients include Case 1 Inc. and Strobe3D &mdash; infrastructure audits, cloud migrations, custom tooling</div>
+        </div>
+        <div class="role-card">
+          <div class="role-title">Contract Engineer</div>
+          <div class="role-org">Southland Industries</div>
+          <div class="role-desc">Enterprise IT support and systems engineering</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="terminal reveal">
+      <div class="terminal-bar">
+        <span class="terminal-dot"></span>
+        <span class="terminal-dot"></span>
+        <span class="terminal-dot"></span>
+      </div>
+      <div class="terminal-body">
+        <span class="comment"># current infrastructure status</span><br>
+        <span class="cmd">$</span> docker ps <span class="flag">--format</span> '{{.Names}} {{.Status}}'<br>
+        one-dashboard &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Up 47 days<br>
+        ono-social-api &nbsp;&nbsp;&nbsp;&nbsp; Up 47 days<br>
+        ono-social-frontend &nbsp;Up 47 days<br>
+        ono-edclv-gallery &nbsp;&nbsp; Up 47 days<br>
+        driftbot-engine &nbsp;&nbsp;&nbsp;&nbsp; Up 12 days<br>
+        <span class="cmd">$</span> <span style="animation:blink 1s infinite">_</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Projects -->
+<section id="projects">
+  <div class="container">
+    <div class="section-label reveal">Projects</div>
+    <h2 class="reveal">What I've built<span class="accent">.</span></h2>
+    <p class="section-desc reveal">Everything here is live. No tutorials, no toy apps &mdash; production systems handling real traffic, real money, real users.</p>
+
+    <div class="projects-grid">
+
+      <!-- ONO Dashboard (featured) -->
+      <div class="project-card featured reveal">
+        <div class="project-details">
+          <div class="project-header">
+            <span class="project-icon">&#9608;</span>
+            <span class="project-status status-live"><span class="status-dot"></span>Live</span>
+          </div>
+          <div class="project-name">ONO Operations Dashboard</div>
+          <p class="project-desc">
+            Full-stack operations hub for One N Only Entertainment. Real-time WooCommerce sync,
+            cash flow forecasting, payment plan management, vendor RBAC portal, and
+            Meta Ads automation &mdash; all in a single containerized deployment.
+          </p>
+          <div class="project-tags">
+            <span class="tag">Node.js</span>
+            <span class="tag">Express</span>
+            <span class="tag">SQLite</span>
+            <span class="tag">Docker</span>
+            <span class="tag">Stripe</span>
+            <span class="tag">WooCommerce</span>
+            <span class="tag">Portainer</span>
+            <span class="tag">DigitalOcean</span>
+          </div>
+        </div>
+        <div class="project-features">
+          <div class="feature-item">Real-time order sync via webhooks + polling</div>
+          <div class="feature-item">Cash flow forecasting with installment tracking</div>
+          <div class="feature-item">Stripe & Affirm payment plan integration</div>
+          <div class="feature-item">RBAC vendor portal with scoped access</div>
+          <div class="feature-item">Meta Ads API automation</div>
+          <div class="feature-item">CSV/PDF export engine</div>
+          <div class="feature-item">Deployed via Portainer at portainer.xeroc00l.org</div>
+        </div>
+      </div>
+
+      <!-- DriftBot -->
+      <div class="project-card reveal">
+        <div class="project-header">
+          <span class="project-icon">&#9670;</span>
+          <span class="project-status status-saas"><span class="status-dot"></span>SaaS</span>
+        </div>
+        <div class="project-name">DriftBot / ZeroDegen</div>
+        <p class="project-desc">
+          Automated crypto trading on Solana via Drift Protocol. 15-module Python engine with
+          webhook routing through Cloudflare tunnels. SaaS tiers at $59/$149/$497/mo with
+          Phantom wallet auth and investor dashboard.
+        </p>
+        <div class="project-tags">
+          <span class="tag">Python</span>
+          <span class="tag">Solana</span>
+          <span class="tag">Drift Protocol</span>
+          <span class="tag">Cloudflare</span>
+          <span class="tag">Stripe</span>
+          <span class="tag">Pine Script</span>
+          <span class="tag">Web3</span>
+        </div>
+      </div>
+
+      <!-- WP Plugins -->
+      <div class="project-card reveal">
+        <div class="project-header">
+          <span class="project-icon">&#9881;</span>
+          <span class="project-status status-live"><span class="status-dot"></span>Live</span>
+        </div>
+        <div class="project-name">Custom WordPress Plugins</div>
+        <p class="project-desc">
+          Suite of WooCommerce plugins for ONO &mdash; bundle receipt fix, payment plan checkout
+          with Stripe invoicing, and a real-time order management JS module
+          integrated into the dashboard.
+        </p>
+        <div class="project-tags">
+          <span class="tag">WordPress</span>
+          <span class="tag">WooCommerce</span>
+          <span class="tag">PHP</span>
+          <span class="tag">Stripe API</span>
+          <span class="tag">JavaScript</span>
+        </div>
+      </div>
+
+      <!-- ONO Social -->
+      <div class="project-card reveal">
+        <div class="project-header">
+          <span class="project-icon">&#9733;</span>
+          <span class="project-status status-live"><span class="status-dot"></span>Live</span>
+        </div>
+        <div class="project-name">ONO Social</div>
+        <p class="project-desc">
+          Festival social and roommate matching app. Multi-container Docker stack with
+          API, frontend, Redis, and Postgres &mdash; secured behind Cloudflare Zero Trust
+          with QR-code entry.
+        </p>
+        <div class="project-tags">
+          <span class="tag">Node.js</span>
+          <span class="tag">Docker</span>
+          <span class="tag">Redis</span>
+          <span class="tag">Cloudflare</span>
+          <span class="tag">Zero Trust</span>
+        </div>
+      </div>
+
+      <!-- Gallery -->
+      <div class="project-card reveal">
+        <div class="project-header">
+          <span class="project-icon">&#9635;</span>
+          <span class="project-status status-dev"><span class="status-dot"></span>Rolling Out</span>
+        </div>
+        <div class="project-name">ONO EDC Gallery</div>
+        <p class="project-desc">
+          Community photo-sharing app for EDC Las Vegas. Cloudflare Zero Trust auth
+          with a 4-stage rollout plan. Diamond grid UI, real-time uploads,
+          integrated into the main dashboard.
+        </p>
+        <div class="project-tags">
+          <span class="tag">Node.js</span>
+          <span class="tag">Cloudflare</span>
+          <span class="tag">Zero Trust</span>
+          <span class="tag">Docker</span>
+          <span class="tag">DigitalOcean</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Stack -->
+<section id="stack">
+  <div class="container" style="text-align:center">
+    <div class="section-label reveal" style="justify-content:center">Tech Stack</div>
+    <h2 class="reveal">Tools of the trade<span class="accent">.</span></h2>
+    <p class="section-desc reveal" style="margin-left:auto;margin-right:auto">
+      Battle-tested technologies I ship production code with.
+    </p>
+    <div class="stack-grid reveal">
+      <div class="stack-badge"><span class="badge-icon">&#9881;</span> Node.js</div>
+      <div class="stack-badge"><span class="badge-icon">&#9883;</span> React</div>
+      <div class="stack-badge"><span class="badge-icon">&#9679;</span> Python</div>
+      <div class="stack-badge"><span class="badge-icon">&#9041;</span> WordPress</div>
+      <div class="stack-badge"><span class="badge-icon">&#9638;</span> Docker</div>
+      <div class="stack-badge"><span class="badge-icon">&#9729;</span> Cloudflare</div>
+      <div class="stack-badge"><span class="badge-icon">&#9733;</span> Stripe</div>
+      <div class="stack-badge"><span class="badge-icon">&#9707;</span> MySQL</div>
+      <div class="stack-badge"><span class="badge-icon">&#9642;</span> SQLite</div>
+      <div class="stack-badge"><span class="badge-icon">&#8644;</span> REST APIs</div>
+      <div class="stack-badge"><span class="badge-icon">&#9650;</span> DigitalOcean</div>
+      <div class="stack-badge"><span class="badge-icon">&#9776;</span> Portainer</div>
+      <div class="stack-badge"><span class="badge-icon">&#9670;</span> Solana / Web3</div>
+      <div class="stack-badge"><span class="badge-icon">&#9655;</span> Pine Script</div>
+      <div class="stack-badge"><span class="badge-icon">&#9608;</span> Linux / Ubuntu</div>
+      <div class="stack-badge"><span class="badge-icon">&#10010;</span> Git</div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section id="contact">
+  <div class="container">
+    <div class="contact-box reveal">
+      <div class="section-label" style="justify-content:center">Contact</div>
+      <h2>Let's build something<span class="accent">.</span></h2>
+      <p>Open to consulting, contract work, and interesting infrastructure challenges.</p>
+      <div class="contact-links">
+        <a href="mailto:daniel@xeroc00l.org" class="btn btn-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+          Email Me
+        </a>
+        <a href="https://github.com/xeroc00l" class="btn btn-outline" target="_blank">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          GitHub
+        </a>
+        <a href="https://xeroc00l.org" class="btn btn-outline" target="_blank">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M2 12h20M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          xeroc00l.org
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="container">
+    <p>&copy; 2026 Daniel Meyers &mdash; xeroc00l.org &nbsp;|&nbsp; Built with code, caffeine, and Claude.</p>
+  </div>
+</footer>
+
+<script>
+// Scroll reveal
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    if (entry.isIntersecting) {
+      entry.target.classList.add('visible');
+    }
+  });
+}, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+// Close mobile nav on link click
+document.querySelectorAll('.nav-links a').forEach(link => {
+  link.addEventListener('click', () => {
+    document.querySelector('.nav-links').classList.remove('open');
+  });
+});
+
+// Blinking cursor animation
+const style = document.createElement('style');
+style.textContent = '@keyframes blink{0%,50%{opacity:1}51%,100%{opacity:0}}';
+document.head.appendChild(style);
+</script>
+</body>
+</html>
