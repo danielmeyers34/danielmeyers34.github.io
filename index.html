@@ -302,10 +302,46 @@
     <div class="cards">
       <div class="card reveal">
         <div class="card-top"><h3>Perps Trading Engine</h3><span class="badge b-live">● Live</span></div>
-        <p class="desc">Automated perpetuals trading on a decentralized derivatives exchange (migrated from
-          Drift). A modular Python engine with webhook routing through Cloudflare tunnels, a kill-switch safety
-          layer, and shadow-mode signal logging for validation before anything goes live.</p>
-        <div class="tags"><span class="tag">Python</span><span class="tag">Perps DEX</span><span class="tag">Cloudflare</span><span class="tag">Web3</span></div>
+        <p class="desc">Six small automated bots on a decentralized perpetuals venue, one per wallet and timeframe,
+          wrapped by independent services: a liquidation-aware stop guardian, a paced market-data proxy, a position
+          monitor, and a fills relay. Signals arrive from TradingView through Cloudflare tunnels and a fan-out; every
+          fill is recorded to a public 60-day ledger, losses included. A hobby engineering project, not a fund.</p>
+        <div class="tags"><span class="tag">TypeScript</span><span class="tag">Python</span><span class="tag">Docker</span><span class="tag">Cloudflare</span><span class="tag">TimescaleDB</span></div>
+      </div>
+      <div class="card reveal">
+        <div class="card-top"><h3>ZeroDegen Research Programme</h3><span class="badge b-live">● Live</span></div>
+        <p class="desc">A falsification-first research stack: every strategy idea is pre-registered, replayed on six
+          years of data with a random-entry placebo <em>and</em> a drift-preserving bootstrap null, a positive control
+          through the same pipeline, and a held-out window. ~53 verdicts in a public-style ledger so nothing gets
+          re-chased; a market feature library that measures what state predicts (move size: yes; direction: no).
+          "Nothing here" is an allowed answer, and usually the honest one.</p>
+        <div class="tags"><span class="tag">Python</span><span class="tag">NumPy</span><span class="tag">Statistics</span><span class="tag">Pre-registration</span></div>
+      </div>
+      <div class="card reveal">
+        <div class="card-top"><h3>Command Center &amp; Observability</h3><span class="badge b-live">● Live</span></div>
+        <p class="desc">The ops dashboard behind Cloudflare Access: live positions, take-home P&amp;L after fees, bot
+          health, risk guardrails, alert-pipe status, funding and structure radars, a Stripe card — regenerated every
+          two minutes from a snapshot the feed already holds. Around it: an 82-check morning audit to Telegram, a
+          patch log that is derived from live container images and refuses to publish leaky copy, and a 1-second
+          order-flow recorder.</p>
+        <div class="tags"><span class="tag">Python</span><span class="tag">Cloudflare Access</span><span class="tag">systemd</span><span class="tag">Telegram</span></div>
+      </div>
+      <div class="card reveal">
+        <div class="card-top"><h3>solstruct Market-Structure Scanner</h3><span class="badge b-live">● Live</span></div>
+        <p class="desc">A second, isolated box that scans five majors across seven timeframes every hour with
+          structure detectors (break of structure, change of character, fair-value gaps, order blocks, liquidity
+          sweeps) and publishes a dashboard plus a per-timeframe bias summary that the command center pulls over a
+          private VPC. Built from a zip to a live tunnel in one session, four shipped bugs fixed on the wire.</p>
+        <div class="tags"><span class="tag">Python</span><span class="tag">Docker Compose</span><span class="tag">nginx</span><span class="tag">Cloudflare Tunnel</span></div>
+      </div>
+      <div class="card reveal">
+        <div class="card-top"><h3>LLM Operations Layer</h3><span class="badge b-live">● Live</span></div>
+        <p class="desc">An AI co-pilot that runs operations from a persistent, git-tracked memory of every deploy,
+          incident and research verdict (300+ entries since April 2026); multi-agent workflows with adversarial
+          review stages for audits, designs and documents; a retrieval "brain" over the project's own refutations that
+          surfaces "we already killed this" before anything else; and an advisor whose numbers are audited by code
+          that fails closed. It holds no keys and cannot trade — the human decides what goes live.</p>
+        <div class="tags"><span class="tag">Claude</span><span class="tag">RAG</span><span class="tag">Qdrant</span><span class="tag">Multi-agent</span></div>
       </div>
       <div class="card reveal">
         <div class="card-top"><h3>ZeroDegen v12 Indicator</h3><span class="badge b-build">◆ Active dev</span></div>
