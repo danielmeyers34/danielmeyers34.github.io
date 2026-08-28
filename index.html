@@ -220,15 +220,15 @@
 
     <div class="terminal" aria-hidden="true">
       <div class="term-bar"><span class="d r"></span><span class="d y"></span><span class="d g"></span>
-        <span class="title">daniel@xeroc00l: ~</span></div>
+        <span class="title">ops@homelab: ~</span></div>
       <div class="term-body">
         <div class="cmd"><span class="p">$</span> docker ps --format '{{.Names}}  {{.Status}}'</div>
-        <div class="row">one-dashboard          <span class="up">Up 47 days</span></div>
-        <div class="row">ono-social-api         <span class="up">Up 47 days</span></div>
-        <div class="row">ono-vegas-gallery      <span class="up">Up 31 days</span></div>
-        <div class="row">perps-trading-engine   <span class="up">Up 12 days</span></div>
-        <div class="row">hivemind-structure     <span class="up">Up 9 days</span></div>
-        <div class="row">portainer              <span class="up">Up 61 days</span></div>
+        <div class="row">web-frontend           <span class="up">Up (healthy)</span></div>
+        <div class="row">api                    <span class="up">Up (healthy)</span></div>
+        <div class="row">worker                 <span class="up">Up (healthy)</span></div>
+        <div class="row">postgres               <span class="up">Up (healthy)</span></div>
+        <div class="row">redis                  <span class="up">Up (healthy)</span></div>
+        <div class="row">reverse-proxy          <span class="up">Up (healthy)</span></div>
         <div class="cmd"><span class="p">$</span> <span class="cursor"></span></div>
       </div>
     </div>
@@ -377,9 +377,9 @@
     <div class="cards">
       <div class="card reveal">
         <div class="card-top"><h3>xeroc00l Infrastructure</h3><span class="badge b-live">● Live</span></div>
-        <p class="desc">The self-hosted backbone behind everything here: a DigitalOcean droplet running a
-          Docker/Portainer stack, with every service secured behind Cloudflare Zero Trust tunnels under
-          xeroc00l.org and onenonlyedm.com.</p>
+        <p class="desc">The self-hosted backbone behind everything here: a cloud VPS running a containerized
+          stack managed with Portainer, with every service published only through Cloudflare Zero Trust
+          tunnels — no inbound ports exposed.</p>
         <div class="tags"><span class="tag">DigitalOcean</span><span class="tag">Docker</span><span class="tag">Portainer</span><span class="tag">Cloudflare Zero Trust</span><span class="tag">Ubuntu</span></div>
       </div>
       <div class="card reveal">
