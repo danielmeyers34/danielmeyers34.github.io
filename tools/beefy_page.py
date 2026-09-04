@@ -76,7 +76,7 @@ MIN_TVL_B = 250_000       # card B floor -- see _card_b(): only 2 ETH/BTC/SOL
                           # brief's $1M floor would render a 2-row card.
 TOP_N = 15
 MAX_APY = 10.0            # 1000% -- the API returns unfiltered 1e23 garbage
-HIST_KEEP_DAYS = 45
+HIST_KEEP_DAYS = 120      # a 90d mean needs >90d retained; the DefiLlama seed backfills this far
 HIST_MIN_TVL = 250_000
 HIST_MIN_GAP_H = 20       # at most ~1 sample/day per vault
 
