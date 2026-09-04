@@ -1,0 +1,62 @@
+name: Rebuild Beefy yield page
+
+on:
+  schedule:
+    - cron: '17 */6 * * *'      # every 6 hours; GitHub may delay under load
+  workflow_dispatch:            # and on demand
+
+permissions:
+  contents: write
+
+concurrency:
+  group: beefy-rebuild
+  cancel-in-progress: false
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: pip install --quiet requests
+
+      - name: Rebuild the page
+        env:
+          BEEFY_HTML_OUT: ${{ github.workspace }}/beefy.html
+          BEEFY_HIST: ${{ github.workspace }}/data/beefy_apy_history.json
+          BEEFY_CACHE: /tmp/beefy_cache.json     # deliberately outside the repo
+        run: python3 tools/beefy_page.py
+
+      - name: Verify the build before committing
+        run: |
+          set -e
+          test -s beefy.html
+          # the page must never be committed in a degraded state
+          if grep -q 'UNAVAILABLE' beefy.html; then
+            echo "::error::a card failed to render; refusing to commit"; exit 1
+          fi
+          # public-copy gate: none of these may ever appear
+          for pat in hyperliquid "Command Center" zerodegen droplet xeroc00l; do
+            if grep -qi -- "$pat" beefy.html; then
+              echo "::error::forbidden string in output: $pat"; exit 1
+            fi
+          done
+          grep -q 'Not investment advice' beefy.html
+          echo "verified: $(wc -c < beefy.html) bytes, $(grep -c '<h2>' beefy.html) cards"
+
+      - name: Commit if changed
+        run: |
+          git config user.name  "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add beefy.html data/beefy_apy_history.json
+          if git diff --staged --quiet; then
+            echo "no change"
+          else
+            git commit -m "Rebuild Beefy yield page ($(date -u +%Y-%m-%dT%H:%MZ))"
+            git push
+          fi
