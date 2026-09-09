@@ -80,6 +80,19 @@ HIST_KEEP_DAYS = 120      # a 90d mean needs >90d retained; the DefiLlama seed b
 HIST_MIN_TVL = 250_000
 HIST_MIN_GAP_H = 20       # at most ~1 sample/day per vault
 
+# Harvest staleness (item 5). A vault that has not compounded in weeks is either
+# unprofitable to harvest or abandoned; either way the advertised APY is fiction.
+HARVEST_AMBER_D = 7
+HARVEST_RED_D = 30
+
+# Realized-vs-quoted (item 4). Highlight when the dollar outcome trails the
+# advertised rate by more than this many percentage points.
+REALIZED_GAP_PP = 5.0
+REALIZED_WINDOW_D = 30
+PROMO_MIN_RUN_D = 7       # promo must have been live >=7d before a drop counts
+PROMO_AFTER_D = 14        # what real APY did in the 14d after it ended
+SPARK_DAYS = 30
+
 # --------------------------------------------------------------- apr classes
 FEE_KEYS = ("tradingApr", "clmApr", "rewardPoolTradingApr", "lendingApr")
 INC_KEYS = ("vaultApr", "merklApr", "rewardPoolApr", "liquidStakingApr",
@@ -114,7 +127,7 @@ LST_FAM = re.compile(
 # there is no reason to park all of it in the cache file.
 VAULT_FIELDS = ("id", "name", "chain", "status", "type", "assets", "platformId",
                 "earnContractAddress", "tokenAddress", "risks",
-                "lastHarvest")
+                "lastHarvest", "oracleId", "pricePerFullShare")
 
 
 def classify(assets):
@@ -145,6 +158,32 @@ EQUITY_TICKER = re.compile(
 
 # Chains that list tokenized equities exclusively; a bare ticker there needs no suffix.
 EQUITY_CHAINS = {"robinhood"}
+
+# Tokenized commodities / precious metals (item 3). Two families:
+#   * native metal tokens  -- PAXG, XAUT/XAUt0, KAU, AUX ... these are the metal.
+#   * wrapped commodity ETFs -- GLDrh, SLVrh, USOx ... an issuer suffix, same
+#     marker rule as equities, so a bare "GLD" on an ordinary chain is rejected.
+# Kept separate from EQUITY_TICKER on purpose: gold is not a share, and card E
+# is titled "tokenized equities". Folding metals in there would be a category
+# error even though both are RWAs.
+METAL_NATIVE = re.compile(r"^(PAXG|XAUT0?|XAUT|TXAU|KAU|AUX|VNXAU|CACHE?GOLD|CGT|DGX|"
+                          r"XAGX?|KAG|TXAG|SLVT)$", re.I)
+COMMODITY_ETF = re.compile(r"^(GLD|GLDM|IAU|SLV|SIVR|PPLT|PALL|USO|UNG|DBC|DBA|CORN|"
+                           r"WEAT|SOYB|UGA|BNO|COPX|CPER)(?P<mark>c|rh|x|s|\.b)?$", re.I)
+
+
+def is_commodity(assets, chain=None):
+    """True when a vault holds tokenized metal/commodity exposure. Native metal
+    tokens qualify on the symbol alone; ETF wrappers need the same tokenization
+    marker equities need (issuer suffix, or an RWA-only chain)."""
+    for a in (assets or []):
+        a = (a or "").strip()
+        if METAL_NATIVE.match(a):
+            return True
+        m = COMMODITY_ETF.match(a)
+        if m and (m.group("mark") or (chain in EQUITY_CHAINS)):
+            return True
+    return False
 
 
 def is_equity(assets, chain=None):
@@ -237,6 +276,22 @@ class Fetcher(object):
 
 
 # ------------------------------------------------------------------- history
+def _sig4(x):
+    """Round a stored sample to 4 significant figures.
+
+    The store is committed to git and rewritten every run, so precision that
+    nothing reads is pure repo growth. 4 s.f. keeps 12.34% and 0.0001234
+    equally well and costs nothing the page can display. Retention stays at
+    HIST_KEEP_DAYS -- this trims width, not history.
+    """
+    if not isinstance(x, (int, float)) or x != x or x in (float("inf"), float("-inf")):
+        return None if not isinstance(x, (int, float)) else x
+    try:
+        return float("%.4g" % x)
+    except (ValueError, OverflowError):
+        return x
+
+
 def _load_hist():
     try:
         with open(HIST_PATH, "r", encoding="utf-8") as f:
@@ -257,20 +312,35 @@ def _save_hist(hist):
 
 
 def update_history(rows, now, write=True):
-    """Append at most one APY sample per vault per ~day; return {id: 7d delta}.
+    """Append at most one sample per vault per ~day; return {id: 7d delta}.
 
-    The Beefy API exposes no APY history, so the 7d column is built from our
-    own samples. It reads '--' until the workflow has been running a week.
+    Sample format v2:  [ts, total_apy, fee_apr, inc_apr, share_px]
+    v1 rows were [ts, total_apy] and are still read -- everything past index 1
+    is optional, so the 30d sparkline and the 7d delta keep working on the
+    120 days of v1 samples already on disk. The promo split and the realized
+    return need indexes 2..4 and therefore only begin once this build has been
+    running long enough to have written them.
+
+    The Beefy API exposes no history of its own, so every series here is ours.
     """
     hist = _load_hist()
     cut = now - HIST_KEEP_DAYS * 86400
     for r in rows:
-        if r["tvl"] < HIST_MIN_TVL:
+        # Commodity vaults are tracked regardless of size: the category is new,
+        # the vaults are small, and a TVL floor would leave the card with no
+        # sparklines at all. Everything else keeps the existing floor so the
+        # committed store does not balloon.
+        if r["tvl"] < HIST_MIN_TVL and not r.get("cm"):
             continue
         s = hist.get(r["id"]) or []
-        s = [p for p in s if isinstance(p, list) and len(p) == 2 and p[0] > cut]
+        # len(p) >= 2, NOT == 2: the old filter silently discarded any sample
+        # carrying the v2 fields, which would have wiped the split on every run.
+        s = [p for p in s if isinstance(p, list) and len(p) >= 2 and p[0] > cut]
         if not s or now - s[-1][0] > HIST_MIN_GAP_H * 3600:
-            s.append([round(now), round(r["apy"], 8)])
+            px = r.get("share_px")
+            s.append([round(now), _sig4(r["apy"]),
+                      _sig4(r["fee_apr"]), _sig4(r["inc_apr"]),
+                      (_sig4(px) if isinstance(px, (int, float)) else None)])
         hist[r["id"]] = s
     if write:
         _save_hist(hist)
@@ -293,6 +363,11 @@ def build(fetch):
     fees = fetch.get("fees", "/fees")
     boosts = fetch.get("boosts", "/boosts")
     boost_apy = fetch.get("boost_apy", "/apy/boosts")
+    # Share-price sources for the realized-return column. /lps prices an LP or
+    # CLM share; /prices covers single-asset vaults. Both degrade to None, which
+    # renders "n/a" rather than a guess.
+    lps = fetch.get("lps", "/lps") or {}
+    prices = fetch.get("prices", "/prices") or {}
 
     if not vaults or not brk:
         raise RuntimeError("core endpoints unavailable (vaults=%s breakdown=%s)"
@@ -377,6 +452,35 @@ def build(fetch):
         inc_apr = sum(x for _, x in inc_parts)
 
         f = fees.get(vid)          # absent (not zero) for every gov vault
+
+        # Item 1: /fees.performance.total is the authoritative figure -- it is
+        # what the depositor actually pays, and the docstring records it as such.
+        # Cross-check it against the sum of its own components (call + strategist
+        # + treasury + stakers). They disagree on a handful of vaults; where they
+        # do, the row is flagged rather than silently trusting either side.
+        perf_total = perf_parts = None
+        fee_split = False
+        if f:
+            _p = f.get("performance") or {}
+            perf_total = _p.get("total")
+            _comp = [x for k, x in _p.items()
+                     if k != "total" and isinstance(x, (int, float))]
+            if _comp and isinstance(perf_total, (int, float)):
+                perf_parts = sum(_comp)
+                fee_split = abs(perf_parts - perf_total) > 1e-9
+
+        oid = v.get("oracleId") or vid
+        share_px = lps.get(oid)
+        if not isinstance(share_px, (int, float)) or share_px <= 0:
+            share_px = prices.get(oid)
+        if not isinstance(share_px, (int, float)) or share_px <= 0:
+            share_px = None
+        pps = v.get("pricePerFullShare")
+        try:
+            pps = float(pps) / 1e18 if pps is not None else None
+        except (TypeError, ValueError):
+            pps = None
+
         assets = v.get("assets") or []
         rows.append({
             "id": vid, "name": v.get("name") or vid, "chain": v.get("chain") or "?",
@@ -388,9 +492,13 @@ def build(fetch):
             "tvl": float(t or 0), "apy": float(apy),
             "fee_apr": fee_apr, "inc_apr": inc_apr,
             "fee_parts": fee_parts, "inc_parts": inc_parts,
-            "perf": (f or {}).get("performance", {}).get("total"),
+            "perf": perf_total,
+            "perf_parts": perf_parts, "fee_split": fee_split,
             "wdr": (f or {}).get("withdraw"), "has_fee_row": f is not None,
             "last_harvest": v.get("lastHarvest"),
+            "cm": is_commodity(assets, v.get("chain")),
+            "share_px": share_px, "pps": pps,
+            "is_cl": (v.get("type") == "cowcentrated"),
         })
 
     stats = {
@@ -407,8 +515,11 @@ def build(fetch):
     return rows, stats
 
 
-def select(rows, cls_set=None, lst=False, chain=None, min_tvl=0.0, n=TOP_N, eq=False):
+def select(rows, cls_set=None, lst=False, chain=None, min_tvl=0.0, n=TOP_N, eq=False,
+           cm=False):
     def ok(r):
+        if cm:
+            return bool(r.get("cm")) and r["tvl"] >= min_tvl
         if eq:
             return bool(r.get("eq")) and r["tvl"] >= min_tvl
         if chain is not None:
@@ -517,6 +628,12 @@ details.tech summary{cursor:pointer;color:#58a6ff;font-size:.86em;padding:6px 0;
 details.tech summary::-webkit-details-marker{display:none}
 details.tech summary:before{content:"\25b8  ";color:#6e7681}
 details.tech[open] summary:before{content:"\25be  "}
+.spk{display:block;overflow:visible}
+.spk-real{fill:#123f22;stroke:none}
+.spk-promo{fill:#2a2f37;stroke:none}
+.spk-line{fill:none;stroke:#58a6ff;stroke-width:1.2;vector-effect:non-scaling-stroke}
+.rz{font-variant-numeric:tabular-nums}
+.rz .gap{display:block;font-size:.82em}
 .bar{display:inline-block;width:52px;height:6px;background:#21262d;border-radius:3px;overflow:hidden;vertical-align:middle;margin-left:7px}
 .bar i{display:block;height:100%;background:#3fb950}
 .bar i.lo{background:#6e7681}
@@ -598,10 +715,190 @@ def _addr_cell(r):
             ' %s</div>' % (_e(a), _e(short), _e(a), app, exl))
 
 
+# Set once per run in main(); lets _table() reach the sample store without
+# rethreading hist/now through every card signature.
+_HIST = {}
+_NOW = 0.0
+_ROWS = {}
+
+
+def _win(series, now, days):
+    """Samples inside the last N days, oldest first."""
+    if not isinstance(series, list):
+        return []
+    cut = now - days * 86400
+    return [p for p in series
+            if isinstance(p, list) and len(p) >= 2
+            and isinstance(p[0], (int, float)) and p[0] >= cut]
+
+
+def _f(p, i):
+    """Optional field from a history sample; v1 rows stop at index 1."""
+    if len(p) > i and isinstance(p[i], (int, float)):
+        return float(p[i])
+    return None
+
+
+def _v2_since(hist):
+    """Timestamp of the earliest sample carrying the v2 fields (split + price).
+
+    v1 samples stop at index 1, so everything item 2 and item 4 need starts
+    here. Returns None when no v2 sample has been written yet.
+    """
+    best = None
+    for ser in (hist or {}).values():
+        if not isinstance(ser, list):
+            continue
+        for p in ser:
+            if (isinstance(p, list) and len(p) >= 5
+                    and isinstance(p[0], (int, float))):
+                if best is None or p[0] < best:
+                    best = p[0]
+                break            # series are chronological
+    return best
+
+
+def _maturity_note(now=None):
+    """One line explaining why the split/realized columns read n/a.
+
+    Removes itself once the store is old enough to satisfy both features --
+    realized return is the longer of the two at REALIZED_WINDOW_D days.
+    """
+    now = _NOW if now is None else now
+    since = _v2_since(_HIST)
+    if since is not None and (now - since) >= REALIZED_WINDOW_D * 86400:
+        return ""
+    when = _dt.datetime.utcfromtimestamp(since if since else now).strftime("%Y-%m-%d")
+    return ('<div class="note">Tracking since %s &mdash; promo-end detection needs '
+            '%d days, realized return needs %d.</div>'
+            % (when, PROMO_MIN_RUN_D, REALIZED_WINDOW_D))
+
+
+def _spark(series, now, w=78, h=22):
+    """30d total-APY sparkline with the real/promo split shaded.
+
+    Green band = real yield (fees/interest), grey band stacked on top = promo.
+    Samples predating the v2 store carry no split, so those stretches render as
+    a plain total line instead of a filled band -- visibly different, on purpose.
+    """
+    pts = _win(series, now, SPARK_DAYS)
+    if len(pts) < 2:
+        return '<span class=sub>n/a</span>'
+    ts = [p[0] for p in pts]
+    t0, t1 = min(ts), max(ts)
+    span = (t1 - t0) or 1
+    top = max([p[1] for p in pts] + [1e-9]) * 1.08
+
+    def X(t):
+        return round(w * (t - t0) / span, 2)
+
+    def Y(v):
+        return round(h - (h - 2) * (v / top), 2)
+
+    has_split = any(_f(p, 2) is not None for p in pts)
+    out = ['<svg class=spk viewBox="0 0 %d %d" width="%d" height="%d" '
+           'preserveAspectRatio="none" role="img">' % (w, h, w, h)]
+    if has_split:
+        fee_pts = [(X(p[0]), Y(_f(p, 2) or 0.0)) for p in pts]
+        tot_pts = [(X(p[0]), Y(p[1])) for p in pts]
+        # promo band: between the fee line and the total line
+        band = (" ".join("%s,%s" % q for q in tot_pts) + " " +
+                " ".join("%s,%s" % q for q in reversed(fee_pts)))
+        out.append('<polygon class=spk-promo points="%s"/>' % band)
+        base = (" ".join("%s,%s" % q for q in fee_pts) +
+                " %s,%s %s,%s" % (X(t1), h, X(t0), h))
+        out.append('<polygon class=spk-real points="%s"/>' % base)
+    out.append('<polyline class=spk-line points="%s"/>'
+               % " ".join("%s,%s" % (X(p[0]), Y(p[1])) for p in pts))
+    out.append("</svg>")
+    return "".join(out)
+
+
+def _promo_event(series, now):
+    """Detect a promo that ended: inc_apr > 0 for >= PROMO_MIN_RUN_D days, then 0.
+
+    Returns {"ts", "real_before", "real_after", "n_after"} for the most recent
+    such event, or None. Needs index 3 (inc_apr), so it only fires on v2 samples.
+    """
+    pts = [p for p in _win(series, now, HIST_KEEP_DAYS) if _f(p, 3) is not None]
+    if len(pts) < 3:
+        return None
+    end = None
+    for i in range(1, len(pts)):
+        if (_f(pts[i], 3) or 0.0) > 0 or (_f(pts[i - 1], 3) or 0.0) <= 0:
+            continue
+        # pts[i] is zero and pts[i-1] was positive -- walk back over the run
+        j = i - 1
+        while j > 0 and (_f(pts[j - 1], 3) or 0.0) > 0:
+            j -= 1
+        if pts[i - 1][0] - pts[j][0] >= PROMO_MIN_RUN_D * 86400:
+            end = i
+    if end is None:
+        return None
+    ts = pts[end][0]
+    before = [_f(p, 2) for p in pts[:end] if _f(p, 2) is not None]
+    after = [_f(p, 2) for p in pts[end:]
+             if p[0] - ts <= PROMO_AFTER_D * 86400 and _f(p, 2) is not None]
+    return {"ts": ts,
+            "real_before": (before[-1] if before else None),
+            "real_after": (sum(after) / len(after) if after else None),
+            "n_after": len(after)}
+
+
+def _realized(series, now, quoted):
+    """30d realized USD return from share price, annualised, next to the quote.
+
+    The share price from /lps is already denominated in dollars, so it carries
+    the token price move and impermanent loss as well as the fees -- which is
+    exactly the number a concentrated-liquidity depositor gets and the quoted
+    APY hides. Returns None when there is no usable pair of prices, and the
+    caller renders "n/a" rather than a guess.
+    """
+    pts = [p for p in _win(series, now, REALIZED_WINDOW_D + 3)
+           if _f(p, 4) not in (None, 0.0)]
+    if len(pts) < 2:
+        return None
+    a, b = pts[0], pts[-1]
+    days = (b[0] - a[0]) / 86400.0
+    if days < REALIZED_WINDOW_D * 0.6:      # too short a window to annualise
+        return None
+    p0, p1 = _f(a, 4), _f(b, 4)
+    if not p0 or not p1 or p0 <= 0:
+        return None
+    r = p1 / p0 - 1.0
+    try:
+        ann = (1.0 + r) ** (365.0 / days) - 1.0
+    except (OverflowError, ValueError):
+        return None
+    if not (-1.0 < ann < 100.0):
+        return None
+    return {"r30": r, "ann": ann, "days": days,
+            "usd": 1000.0 * (1.0 + r),
+            "gap_pp": 100.0 * ((quoted or 0.0) - ann)}
+
+
+def _harvest_cell(ts, now):
+    """Age since last compound. Amber past a week, red past a month."""
+    if not isinstance(ts, (int, float)) or ts <= 0:
+        return '<span class=sub>&mdash;</span>'
+    if ts > 1e11:                     # some rows arrive in milliseconds
+        ts = ts / 1000.0
+    d = (now - ts) / 86400.0
+    if d < 0:
+        return '<span class=sub>&mdash;</span>'
+    txt = ("%.0fh" % (d * 24)) if d < 1 else ("%.0fd" % d)
+    if d >= HARVEST_RED_D:
+        return '<span class="bd b-RED">%s</span>' % txt
+    if d >= HARVEST_AMBER_D:
+        return '<span class="bd b-AMBER">%s</span>' % txt
+    return '<span class=sub>%s</span>' % txt
+
+
 def _table(sel, d7, show_class=False):
     if not sel:
         return '<div class="note">No vault matched this filter at the current floor.</div>'
-    h = ['<div class="scroll"><table><tr>',
+    h = [_maturity_note(),
+         '<div class="scroll"><table><tr>',
          '<th>chain</th><th>vault</th>']
     if show_class:
         h.append('<th>class</th>')
@@ -610,6 +907,9 @@ def _table(sel, d7, show_class=False):
              '<th class=num>promo yield<div class=sub>token emissions</div></th>'
              '<th class=num>how&nbsp;real</th><th class=num>perf fee</th>'
              '<th class=num>wdr fee</th><th class=num>7d &Delta;APY</th>'
+             '<th class=num>30d APY<div class=sub>real / promo</div></th>'
+             '<th class=num>quoted vs real$<div class=sub>30d, in dollars</div></th>'
+             '<th class=num>last<br>harvested</th>'
              '<th>vault contract<div class=sub>to verify / deposit</div></th></tr>')
     for r in sel:
         tot = r["fee_apr"] + r["inc_apr"]
@@ -637,11 +937,41 @@ def _table(sel, d7, show_class=False):
                '<span class=bar><i class="%s" style="width:%d%%"></i></span>'
                % ("" if frac >= 0.5 else "lo", max(0, min(100, int(round(100 * frac))))))
         h.append('<td class="num %s">%s%s</td>' % (sharecls, share, bar))
-        h.append('<td class=num>%s</td>'
-                 % (_e(_pct(r["perf"], 1)) if r["has_fee_row"] else "&mdash;"))
+        if not r["has_fee_row"]:
+            h.append('<td class=num>&mdash;</td>')
+        elif r.get("fee_split"):
+            # /fees reports a total that its own components do not add up to.
+            h.append('<td class=num>%s <span class="bd b-AMBER" title="/fees '
+                     'performance.total (%s) disagrees with the sum of its '
+                     'components (%s)">?</span></td>'
+                     % (_e(_pct(r["perf"], 1)), _e(_pct(r["perf"], 2)),
+                        _e(_pct(r.get("perf_parts"), 2))))
+        else:
+            h.append('<td class=num>%s</td>' % _e(_pct(r["perf"], 1)))
         h.append('<td class=num>%s</td>'
                  % (_e(_pct(r["wdr"], 3)) if r["has_fee_row"] else "&mdash;"))
         h.append('<td class=num>%s</td>' % dcell)
+
+        ser = _HIST.get(r["id"]) or []
+        h.append('<td class=num>%s</td>' % _spark(ser, _NOW))
+
+        # Item 4: only concentrated-liquidity vaults get the realized column --
+        # they are the ones where the quoted rate and the dollar outcome come
+        # apart, because the range rebalances underneath you.
+        if not r.get("is_cl"):
+            h.append('<td class="num sub">&mdash;</td>')
+        else:
+            rz = _realized(ser, _NOW, r["apy"])
+            if rz is None:
+                h.append('<td class="num sub" title="no 30d share-price history '
+                         'for this pair yet">n/a</td>')
+            else:
+                cls = "neg" if rz["gap_pp"] > REALIZED_GAP_PP else "dim"
+                h.append('<td class="num rz">$%s<span class="gap %s">%+.1fpp vs '
+                         'quote</span></td>'
+                         % (_e("{:,.0f}".format(rz["usd"])), cls, -rz["gap_pp"]))
+
+        h.append('<td class=num>%s</td>' % _harvest_cell(r.get("last_harvest"), _NOW))
         h.append('<td>%s</td>' % _addr_cell(r))
         h.append("</tr>")
     h.append("</table></div>")
@@ -747,6 +1077,37 @@ def _card_e(rows, d7):
                _table(sel, d7, show_class=True)))
 
 
+def _card_f(rows, d7):
+    """Item 3: tokenized metals/commodities. Deliberately its own card rather
+    than folded into card E -- gold is not a share, and the risks differ."""
+    sel = select(rows, cm=True, n=25)
+    if not sel:
+        return ('<h2>\U0001f947 F &middot; COMMODITIES / PRECIOUS METALS</h2>'
+                '<p class="lead">No Beefy vault currently holds a tokenized '
+                'commodity.</p>')
+    tot = sum(r["tvl"] for r in sel)
+    n_fee = sum(1 for r in sel if r["fee_apr"] > 0)
+    chains = ", ".join(sorted({r["chain"] for r in sel}))
+    return ('<h2>\U0001f947 F &middot; COMMODITIES / PRECIOUS METALS</h2>'
+            '<p class="lead">Vaults holding tokenized gold, silver and other '
+            'commodities \u2014 native metal tokens (PAXG, XAUT) and wrapped '
+            'commodity ETFs (GLD, SLV) \u2014 either paired against a stablecoin '
+            'or against each other. <b>%d vaults, %s in total, on %s.</b> '
+            '<b>%d of %d earn from real trading activity</b> rather than token '
+            'emissions.</p>'
+            '<div class="note risk"><b>A metal pair is still a two-sided pool.</b> '
+            'In a GLD/SLV pool you are short the ratio between the two: if gold '
+            'runs against silver you end up holding more of the laggard. The '
+            'advertised APY is fee income on the current range and does not net '
+            'that out \u2014 which is what the <b>quoted vs real$</b> column is '
+            'there to expose.</div>'
+            '<div class="note risk"><b>Wrapper risk.</b> A tokenized commodity is '
+            'an issuer\u2019s claim, not the metal. Redemption terms and issuer '
+            'solvency sit on top of every other risk here.</div>%s'
+            % (len(sel), _usd(tot), chains, n_fee, len(sel),
+               _table(sel, d7, show_class=True)))
+
+
 def _card_d(stats, gen_utc):
     m = stats["meta"]
     kb = [("total TVL", _usd(stats["total_tvl"])),
@@ -771,7 +1132,8 @@ def _card_d(stats, gen_utc):
 
     h.append('<div class="scroll"><table><tr><th>endpoint</th><th>source</th>'
              '<th class=num>age</th><th>error</th></tr>')
-    for k in ("vaults", "breakdown", "tvl", "fees", "boosts", "boost_apy"):
+    for k in ("vaults", "breakdown", "tvl", "fees", "boosts", "boost_apy",
+              "lps", "prices"):
         d = m.get(k) or {"src": "not fetched", "age_s": None, "err": None}
         cls = {"live": "b-GREEN", "cache": "b-INFO",
                "stale-cache": "b-AMBER", "FAILED": "b-RED"}.get(d["src"], "b-INFO")
@@ -784,6 +1146,41 @@ def _card_d(stats, gen_utc):
     top = sorted(stats["chain_tvl"].items(), key=lambda x: -x[1])[:8]
     h.append('<div class="note">Top chains by TVL: %s</div>'
              % _e(" · ".join("%s %s" % (c, _usd(v)) for c, v in top)))
+
+    # Item 2: promos that ended -- what the emissions were, and what the vault
+    # actually paid in the fortnight after they stopped.
+    ev = []
+    for vid, ser in _HIST.items():
+        e = _promo_event(ser, _NOW)
+        if e:
+            ev.append((e["ts"], vid, e))
+    ev.sort(reverse=True)
+    h.append('<h3 style="margin:16px 0 6px;font-size:1em;color:#e6edf3">'
+             'Recently ended promos</h3>')
+    if not ev:
+        note = _maturity_note()
+        if note:
+            h.append(note)
+        else:
+            h.append('<div class="note">No promo has ended inside the recorded '
+                     'window.</div>')
+    else:
+        h.append('<div class="scroll"><table><tr><th>vault</th><th>chain</th>'
+                 '<th class=num>promo ended</th>'
+                 '<th class=num>real APY before</th>'
+                 '<th class=num>real APY, next %dd</th></tr>' % PROMO_AFTER_D)
+        for ts, vid, e in ev[:15]:
+            r = _ROWS.get(vid) or {}
+            when = _dt.datetime.utcfromtimestamp(ts).strftime("%Y-%m-%d")
+            h.append('<tr><td class=vid>%s</td><td>%s</td><td class=num>%s</td>'
+                     '<td class=num>%s</td><td class=num>%s</td></tr>'
+                     % (_e(vid), _e(r.get("chain") or "?"), _e(when),
+                        _e(_pct(e["real_before"])) if e["real_before"] is not None
+                        else "&mdash;",
+                        (_e(_pct(e["real_after"])) + ' <span class=sub>n=%d</span>'
+                         % e["n_after"]) if e["real_after"] is not None
+                        else '<span class=sub>waiting</span>'))
+        h.append("</table></div>")
 
     if stats["n_outliers"]:
         ex = ", ".join("%s (%.3g%%, %s)" % (i, 100 * a, _usd(t))
@@ -803,10 +1200,14 @@ _INTRO = (
     '<h2 class="plain">What you are looking at</h2>'
     '<p><b>Beefy is a yield-farm manager.</b> You deposit a token; it puts that token to work in '
     'a lending market or a trading pool, collects the rewards, sells them, reinvests them, and '
-    'repeats \u2014 keeping 9.5% of each harvest. It is a separate world from our perp trading: '
+    'repeats \u2014 keeping a performance fee on each harvest. That fee is <b>not one '
+    'number</b>: 9.5% on most vaults, 4.5% on a large minority, and a handful sit elsewhere '
+    'entirely \u2014 so the <b>perf fee</b> column reads it per vault from Beefy\u2019s '
+    '<code>/fees</code> endpoint instead of assuming. It is a separate world from our perp trading: '
     'nothing on this page touches our wallets or our bots.</p>'
     '<p><b>This page ranks every live Beefy vault by where its yield actually comes from.</b> '
-    'It reads Beefy\'s public data twice an hour. No account, no key, no money at risk.</p>'
+    'It rebuilds from Beefy\'s public data every six hours and keeps at most one sample '
+    'per vault per day. No account, no key, no money at risk.</p>'
     '<div class="keyidea"><b>The one idea that makes every table below readable.</b>'
     '<p style="margin:6px 0">A headline APY blends two things that behave nothing alike:</p><ul>'
     '<li><b class="pos">Real yield</b> \u2014 money other people pay you: swap fees, loan '
@@ -892,6 +1293,7 @@ def render(rows, stats, d7, gen_ms, gen_utc):
     body.append(_card("B", _card_b, rows, d7))
     body.append(_card("C", _card_c, rows, d7))
     body.append(_card("E", _card_e, rows, d7))
+    body.append(_card("F", _card_f, rows, d7))
     body.append(_card("D", _card_d, stats, gen_utc))
     bad = [k for k, v in stats["meta"].items() if v["src"] in ("FAILED", "stale-cache")]
     if bad:
@@ -971,9 +1373,14 @@ def main():
     if not a.dry_run:
         fetch.flush()
     d7 = update_history(rows, now, write=not a.dry_run)
+    global _HIST, _NOW
+    _HIST, _NOW = _load_hist(), now
+    _ROWS.clear()
+    _ROWS.update({r["id"]: r for r in rows})
 
     if a.dry_run:
-        for k in ("vaults", "breakdown", "tvl", "fees", "boosts", "boost_apy"):
+        for k in ("vaults", "breakdown", "tvl", "fees", "boosts", "boost_apy",
+              "lps", "prices"):
             d = fetch.meta.get(k, {})
             sys.stderr.write("  %-10s %-12s %s\n" % (k, d.get("src"), d.get("err") or ""))
         sys.stderr.write("built %d rows in %.2fs (%d outliers dropped)\n"
