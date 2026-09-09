@@ -1,0 +1,324 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MEP Contractor Target List</title>
+<meta name="description" content="26 mechanical, electrical, and plumbing contractors that hire IT — a working checklist by Daniel Meyers.">
+<meta property="og:title" content="MEP Contractor Target List">
+<meta property="og:description" content="26 MEP contractors that hire IT, with a checklist for working each one. Your checks save in your browser.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --ground:#F5F6F4; --surface:#FFFFFF; --ink:#1B2430; --ink-2:#4A5563; --muted:#7A8490;
+  --line:#D9DEE3; --line-2:#EAEDF0; --accent:#2C6A9A; --accent-soft:#E3EEF7;
+  --good:#2C7A5B; --good-soft:#E1F1EA; --warn:#B0741E; --warn-soft:#F8EEDC; --bad:#9A3B3B; --bad-soft:#F6E3E3;
+  --review:#5A5FA8; --review-soft:#E7E7F6;
+  --shadow:0 1px 2px rgba(27,36,48,.06),0 4px 14px rgba(27,36,48,.06);
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --ground:#12171D; --surface:#1A2129; --ink:#E7EBEF; --ink-2:#B8C0C9; --muted:#8A94A0;
+  --line:#2C353F; --line-2:#242C35; --accent:#6FA8D6; --accent-soft:#1E3346;
+  --good:#6CC49A; --good-soft:#1B3328; --warn:#E0A94E; --warn-soft:#3A2D14; --bad:#E08484; --bad-soft:#3B1F1F;
+  --review:#A5A8E6; --review-soft:#282A47;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 14px rgba(0,0,0,.3);
+}}
+:root[data-theme="dark"]{
+  --ground:#12171D; --surface:#1A2129; --ink:#E7EBEF; --ink-2:#B8C0C9; --muted:#8A94A0;
+  --line:#2C353F; --line-2:#242C35; --accent:#6FA8D6; --accent-soft:#1E3346;
+  --good:#6CC49A; --good-soft:#1B3328; --warn:#E0A94E; --warn-soft:#3A2D14; --bad:#E08484; --bad-soft:#3B1F1F;
+  --review:#A5A8E6; --review-soft:#282A47;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 14px rgba(0,0,0,.3);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font:15px/1.5 "IBM Plex Sans",system-ui,-apple-system,Segoe UI,sans-serif}
+.mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+a{color:var(--accent)}
+.wrap{max-width:1080px;margin:0 auto;padding:36px 24px 80px}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px;border-bottom:2px solid var(--ink);padding-bottom:16px}
+h1{margin:0;font-size:26px;font-weight:700;letter-spacing:-.01em;text-wrap:balance}
+.sub{margin:4px 0 0;color:var(--ink-2);max-width:62ch}
+.eyebrow{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600}
+.sync{font-size:12px;color:var(--muted);display:flex;align-items:center;gap:6px}
+.sync .dot{width:8px;height:8px;border-radius:50%;background:var(--muted)}
+.sync.on .dot{background:var(--good)}
+
+.summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:22px 0}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:10px 14px}
+.stat .n{font-size:26px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1.1}
+.stat .l{font-size:12px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-top:2px}
+.stat.s-review .n{color:var(--review)} .stat.s-applied .n{color:var(--good)} .stat.s-passed .n{color:var(--bad)}
+
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:8px 0 18px}
+.toolbar select,.toolbar input{font:inherit;font-size:14px;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:5px;padding:6px 10px}
+.toolbar input{min-width:220px;flex:1}
+.toolbar .spacer{flex:1}
+.hint{font-size:12px;color:var(--muted)}
+
+.group{margin-top:26px}
+.group h2{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);margin:0 0 8px;display:flex;align-items:baseline;gap:10px}
+.group h2 .desc{font-weight:400;letter-spacing:0;text-transform:none;font-size:13px;color:var(--muted)}
+.list{background:var(--surface);border:1px solid var(--line);border-radius:8px;box-shadow:var(--shadow);overflow:hidden}
+.row{border-top:1px solid var(--line-2)}
+.row:first-child{border-top:0}
+.head{display:grid;grid-template-columns:22px 1.6fr 1fr auto auto;gap:12px;align-items:center;padding:12px 14px;cursor:pointer}
+.head:hover{background:color-mix(in srgb,var(--accent-soft) 45%,transparent)}
+.head:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.chev{width:14px;height:14px;color:var(--muted);transition:transform .15s}
+.row.open .chev{transform:rotate(90deg)}
+.name{font-weight:600}
+.name small{display:block;font-weight:400;color:var(--muted);font-size:12px}
+.site{font-size:13px}
+.progress{display:flex;gap:3px}
+.progress i{width:14px;height:6px;border-radius:2px;background:var(--line)}
+.progress i.on{background:var(--accent)}
+.pill{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:999px;white-space:nowrap}
+.pill.todo{background:var(--line-2);color:var(--ink-2)}
+.pill.review{background:var(--review-soft);color:var(--review)}
+.pill.applied{background:var(--good-soft);color:var(--good)}
+.pill.passed{background:var(--bad-soft);color:var(--bad)}
+.pill.watch{background:var(--warn-soft);color:var(--warn)}
+.body{display:none;padding:4px 14px 16px 48px;border-top:1px dashed var(--line-2)}
+.row.open .body{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media (max-width:720px){.head{grid-template-columns:22px 1fr auto}.site,.progress{display:none}.row.open .body{grid-template-columns:1fr;padding-left:14px}}
+.checks{display:flex;flex-direction:column;gap:7px;margin-top:10px}
+.checks label{display:flex;gap:9px;align-items:flex-start;font-size:14px;cursor:pointer}
+.checks input{margin-top:3px;accent-color:var(--accent)}
+.field{margin-top:10px}
+.field .lbl{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:4px}
+.field select,.field textarea{width:100%;font:inherit;font-size:14px;color:var(--ink);background:var(--ground);border:1px solid var(--line);border-radius:5px;padding:7px 9px}
+.field textarea{min-height:96px;resize:vertical;line-height:1.45}
+.meta{font-size:13px;color:var(--ink-2);margin-top:10px}
+.meta b{color:var(--ink)}
+.links{display:flex;gap:12px;flex-wrap:wrap;margin-top:8px;font-size:13px}
+.empty{padding:18px 14px;color:var(--muted);font-size:14px}
+footer{margin-top:36px;font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
+@media (prefers-reduced-motion:reduce){.chev{transition:none}}
+
+.tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.btn{font:inherit;font-size:13px;font-weight:500;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:5px;padding:6px 11px;cursor:pointer}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:hover{color:#fff;filter:brightness(1.08)}
+.fileIn{display:none}
+@media print{.toolbar,.tools,.sync{display:none}.body{display:grid!important}.list{box-shadow:none}.wrap{padding:0}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+<header>
+  <div>
+    <div class="eyebrow">Job search · MEP contractors</div>
+    <h1>MEP Contractor Target List</h1>
+    <p class="sub">26 mechanical, electrical, and plumbing contractors that hire IT. Open a row, tick what you've checked, set a status, leave notes. Your progress saves in this browser only — nothing is uploaded. <a href="#" id="whyLink">Why this list?</a></p>
+  </div>
+  <div class="tools">
+    <button class="btn" id="btnTheme" type="button" title="Toggle light / dark">Theme</button>
+    <button class="btn" id="btnExport" type="button" title="Download your progress as a JSON file">Export</button>
+    <label class="btn" for="fileIn" title="Load a progress file">Import</label><input class="fileIn" id="fileIn" type="file" accept="application/json">
+    <button class="btn" id="btnPrint" type="button">Print</button>
+    <a class="btn primary" id="pdfLink" href="MEP-Contractor-Target-List.pdf" download>Fillable PDF</a>
+  </div>
+</header>
+
+<div id="why" hidden style="margin:18px 0 0;padding:14px 16px;background:var(--surface);border:1px solid var(--line);border-radius:8px;max-width:72ch;font-size:14px;color:var(--ink-2)">
+  These firms run 5,000–40,000 employees, hundreds of job sites, and fabrication shops on the Microsoft stack most of us already know (M365, Entra, Intune, AD, an ITSM platform). Far fewer applicants than SaaS postings, and hiring managers who are glad to see someone who has actually run the tools. Check the location line first — many roles are hybrid at a regional office; corporate IT at the national firms is the likeliest place to find remote. EMCOR and Comfort Systems are holding companies, so check their subsidiaries too. <span style="color:var(--muted)">— Daniel Meyers, <a href="https://www.linkedin.com/in/daniel-meyers-882aa88a" target="_blank" rel="noopener">LinkedIn</a></span>
+</div>
+<div class="summary" id="summary"></div>
+
+<div class="toolbar">
+  <input id="q" type="search" placeholder="Search company, city, domain…" aria-label="Search">
+  <select id="fStatus" aria-label="Filter by status">
+    <option value="">All statuses</option>
+    <option value="todo">Not started</option>
+    <option value="review">Reviewing</option>
+    <option value="watch">Watching</option>
+    <option value="applied">Applied</option>
+    <option value="passed">Passed</option>
+  </select>
+  <select id="fGroup" aria-label="Filter by group">
+    <option value="">All groups</option>
+    <option value="peer">Design-build MEP peers</option>
+    <option value="elec">Electrical peers</option>
+    <option value="local">NorCal / Sacramento</option>
+  </select>
+  <span class="spacer"></span>
+  <span class="hint" id="hint"></span>
+</div>
+
+<div id="groups"></div>
+
+<footer>Checklist order is the order you'd actually work a company: site, careers page, IT openings, location fit, contact, apply. Rankings from ENR's 2025 Top 600 Specialty Contractors; descriptions from company sites. Know a firm that belongs here? <a href="https://www.linkedin.com/in/daniel-meyers-882aa88a" target="_blank" rel="noopener">Tell me</a> and I'll add it. · <a href="https://danielmeyers34.github.io/">danielmeyers34.github.io</a></footer>
+</div>
+
+<script>
+const GROUPS = {
+  peer:  {title:'Design-build MEP peers', desc:'National, in-house engineering + fabrication + service — closest to Southland'},
+  elec:  {title:'Electrical peers', desc:'Same scale and customers, electrical-led'},
+  local: {title:'Northern California / Sacramento', desc:'Local mechanical shops — hybrid from Roseville is realistic'},
+};
+const COMPANIES = [
+  {id:'emcor', name:'EMCOR Group', url:'https://www.emcorgroup.com', hq:'Norwalk, CT', group:'peer', note:'#2 specialty contractor nationally; dozens of regional subsidiaries'},
+  {id:'comfort-systems', name:'Comfort Systems USA', url:'https://www.comfortsystemsusa.com', hq:'Houston, TX', group:'peer', note:'Largest mechanical, #5 overall; subsidiary structure'},
+  {id:'acco', name:'ACCO Engineered Systems', url:'https://www.accoes.com', hq:'Glendale, CA', group:'peer', note:'Largest Western mechanical contractor — most direct CA rival'},
+  {id:'bernhard', name:'Bernhard', url:'https://www.bernhard.com', hq:'Metairie, LA / Little Rock, AR', group:'peer', note:'Design-build MEP + energy-as-a-service'},
+  {id:'mckinstry', name:'McKinstry', url:'https://www.mckinstry.com', hq:'Seattle, WA', group:'peer', note:'Design-build-operate-maintain; very Southland-like'},
+  {id:'tdindustries', name:'TDIndustries', url:'https://www.tdindustries.com', hq:'Dallas, TX', group:'peer', note:'Employee-owned; mechanical design-build + facilities'},
+  {id:'harris', name:'Harris', url:'https://www.harriscompany.com', hq:'St. Paul, MN', group:'peer', note:'National mechanical design-build'},
+  {id:'limbach', name:'Limbach Holdings', url:'https://www.limbach.com', hq:'Pittsburgh, PA', group:'peer', note:'Public (LMB); building-systems MEP'},
+  {id:'jh-kelly', name:'JH Kelly', url:'https://www.jhkelly.com', hq:'Longview, WA', group:'peer', note:'Pacific NW MEP incl. data centers'},
+  {id:'murray', name:'Murray Company', url:'https://www.murraycompany.com', hq:'Rancho Dominguez, CA', group:'peer', note:'SoCal mechanical design-build'},
+  {id:'kinetics', name:'Kinetics', url:'https://www.kinetics.net', hq:'Dallas, TX', group:'peer', note:'Mechanical + process; semiconductor-heavy'},
+  {id:'us-engineering', name:'U.S. Engineering', url:'https://www.usengineering.com', hq:'Kansas City, MO', group:'peer', note:'Mechanical design-build + prefab'},
+  {id:'mmc', name:'MMC Contractors', url:'https://www.mmccontractors.com', hq:'Kansas City, MO', group:'peer', note:'Mechanical; Western offices'},
+  {id:'egan', name:'Egan Company', url:'https://www.eganco.com', hq:'Minneapolis, MN', group:'peer', note:'Multi-trade design-build'},
+  {id:'baker-group', name:'Baker Group', url:'https://www.thebakergroup.com', hq:'Des Moines, IA', group:'peer', note:'MEP + controls'},
+  {id:'rosendin', name:'Rosendin', url:'https://www.rosendin.com', hq:'San Jose, CA', group:'elec', note:'#7 nationally; employee-owned'},
+  {id:'cupertino-electric', name:'Cupertino Electric', url:'https://www.cei.com', hq:'San Jose, CA', group:'elec', note:''},
+  {id:'bergelectric', name:'Bergelectric', url:'https://www.bergelectric.com', hq:'Los Angeles, CA', group:'elec', note:''},
+  {id:'helix', name:'Helix Electric', url:'https://www.helixelectric.com', hq:'San Diego, CA', group:'elec', note:''},
+  {id:'myr', name:'MYR Group', url:'https://www.myrgroup.com', hq:'Thornton, CO', group:'elec', note:'#8 nationally; public (MYRG)'},
+  {id:'pan-pacific', name:'Pan-Pacific Mechanical', url:'https://ppmechanical.com', hq:'Fountain Valley, CA + NorCal', group:'local', note:''},
+  {id:'critchfield', name:'Critchfield Mechanical', url:'https://www.cmihvac.com', hq:'San Jose, CA', group:'local', note:''},
+  {id:'frank-m-booth', name:'Frank M. Booth', url:'https://www.frankmbooth.com', hq:'Marysville, CA', group:'local', note:'Closest to Roseville'},
+  {id:'marelich', name:'Marelich Mechanical', url:'https://www.marelich.com', hq:'Hayward, CA', group:'local', note:''},
+  {id:'air-systems', name:'Air Systems Inc.', url:'https://www.airsystemsinc.com', hq:'San Jose, CA', group:'local', note:''},
+  {id:'western-allied', name:'Western Allied Mechanical', url:'https://www.westernallied.com', hq:'Menlo Park, CA', group:'local', note:''},
+];
+const CHECKS = [
+  ['site','Reviewed the company site (services, size, regions)'],
+  ['careers','Checked the careers page'],
+  ['itroles','Found IT / systems / infrastructure openings'],
+  ['location','Remote or Sacramento-hybrid is viable'],
+  ['contact','Found a hiring manager or IT lead on LinkedIn'],
+  ['applied','Applied (resume + cover letter sent)'],
+];
+const STATUS = {todo:'Not started', review:'Reviewing', watch:'Watching', applied:'Applied', passed:'Passed'};
+
+const state = {};            // id -> {status, checks:{}, notes, updated}
+let db = null, openId = null;
+const $ = s => document.querySelector(s);
+const domain = u => u.replace(/^https?:\/\/(www\.)?/,'').replace(/\/$/,'');
+const st = id => state[id] || {status:'todo', checks:{}, notes:''};
+
+function render(){
+  const q = $('#q').value.trim().toLowerCase();
+  const fs = $('#fStatus').value, fg = $('#fGroup').value;
+  const counts = {todo:0,review:0,watch:0,applied:0,passed:0};
+  COMPANIES.forEach(c => counts[st(c.id).status]++);
+  $('#summary').innerHTML = [
+    ['todo','Not started'],['review','Reviewing'],['watch','Watching'],['applied','Applied'],['passed','Passed']
+  ].map(([k,l]) => `<div class="stat s-${k}"><div class="n">${counts[k]}</div><div class="l">${l}</div></div>`).join('');
+
+  const shown = COMPANIES.filter(c => {
+    const s = st(c.id);
+    if (fs && s.status !== fs) return false;
+    if (fg && c.group !== fg) return false;
+    if (q && !(c.name+' '+c.hq+' '+c.url+' '+c.note).toLowerCase().includes(q)) return false;
+    return true;
+  });
+  $('#hint').textContent = `${shown.length} of ${COMPANIES.length} companies`;
+
+  const out = [];
+  for (const g of Object.keys(GROUPS)){
+    const items = shown.filter(c => c.group===g);
+    if (!items.length) continue;
+    out.push(`<section class="group"><h2>${GROUPS[g].title}<span class="desc">${GROUPS[g].desc}</span></h2><div class="list">`);
+    for (const c of items){
+      const s = st(c.id);
+      const done = CHECKS.filter(([k]) => s.checks[k]).length;
+      out.push(`<div class="row ${openId===c.id?'open':''}" data-id="${c.id}">
+        <div class="head" tabindex="0" role="button" aria-expanded="${openId===c.id}">
+          <svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg>
+          <div class="name">${c.name}<small>${c.hq}${c.note?' · '+c.note:''}</small></div>
+          <div class="site mono"><a href="${c.url}" target="_blank" rel="noopener">${domain(c.url)}</a></div>
+          <div class="progress" title="${done} of ${CHECKS.length} checks">${CHECKS.map(([k]) => `<i class="${s.checks[k]?'on':''}"></i>`).join('')}</div>
+          <span class="pill ${s.status}">${STATUS[s.status]}</span>
+        </div>
+        <div class="body">
+          <div>
+            <div class="field"><div class="lbl">Checklist</div>
+              <div class="checks">${CHECKS.map(([k,l]) => `<label><input type="checkbox" data-check="${k}" ${s.checks[k]?'checked':''}> <span>${l}</span></label>`).join('')}</div>
+            </div>
+            <div class="links"><a href="${c.url}" target="_blank" rel="noopener">Company site ↗</a><a href="${c.url.replace(/\/$/,'')}/careers" target="_blank" rel="noopener">Try /careers ↗</a><a href="https://www.linkedin.com/company/${encodeURIComponent(c.name.toLowerCase().replace(/[^a-z0-9]+/g,'-'))}" target="_blank" rel="noopener">LinkedIn ↗</a></div>
+          </div>
+          <div>
+            <div class="field"><div class="lbl">Status</div>
+              <select data-status>${Object.entries(STATUS).map(([k,l]) => `<option value="${k}" ${s.status===k?'selected':''}>${l}</option>`).join('')}</select>
+            </div>
+            <div class="field"><div class="lbl">Notes</div>
+              <textarea data-notes placeholder="Roles seen, contacts, salary, remote policy, why passed…">${esc(s.notes||'')}</textarea>
+            </div>
+            <div class="meta">${s.updated?'Updated '+new Date(s.updated).toLocaleString():'No activity yet'}</div>
+          </div>
+        </div>
+      </div>`);
+    }
+    out.push('</div></section>');
+  }
+  $('#groups').innerHTML = out.length ? out.join('') : '<div class="list"><div class="empty">Nothing matches that filter.</div></div>';
+}
+function esc(s){return s.replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));}
+
+// ----- persistence (this browser only) -----
+const KEY = 'mep-tracker-v1';
+const timers = {};
+function load(){ try { const raw = localStorage.getItem(KEY); if (raw) Object.assign(state, JSON.parse(raw)); } catch(e){} }
+function persist(){ try { localStorage.setItem(KEY, JSON.stringify(state)); } catch(e){} }
+function save(id, patch){
+  const cur = {...st(id), checks:{...st(id).checks}};
+  Object.assign(cur, patch, {updated: Date.now()});
+  state[id] = cur; persist(); render();
+}
+document.addEventListener('click', e => {
+  const head = e.target.closest('.head');
+  if (head && !e.target.closest('a')){ const id = head.parentElement.dataset.id; openId = openId===id ? null : id; render(); }
+});
+document.addEventListener('keydown', e => {
+  if ((e.key==='Enter'||e.key===' ') && e.target.classList.contains('head')){ e.preventDefault(); e.target.click(); }
+});
+document.addEventListener('change', e => {
+  const row = e.target.closest('.row'); if (!row) return; const id = row.dataset.id;
+  if (e.target.dataset.check !== undefined){
+    const checks = {...st(id).checks, [e.target.dataset.check]: e.target.checked};
+    const patch = {checks};
+    if (e.target.dataset.check==='applied' && e.target.checked) patch.status='applied';
+    else if (st(id).status==='todo' && e.target.checked) patch.status='review';
+    save(id, patch);
+  } else if (e.target.dataset.status !== undefined){ save(id, {status:e.target.value}); }
+});
+document.addEventListener('input', e => {
+  if (e.target.dataset.notes !== undefined){
+    const id = e.target.closest('.row').dataset.id; const v = e.target.value;
+    clearTimeout(timers[id]); timers[id] = setTimeout(() => { state[id] = {...st(id), notes:v, updated:Date.now()}; persist(); }, 500);
+  }
+  if (e.target.id==='q') render();
+});
+$('#fStatus').addEventListener('change', render); $('#fGroup').addEventListener('change', render);
+$('#whyLink').addEventListener('click', e => { e.preventDefault(); $('#why').hidden = !$('#why').hidden; });
+$('#btnPrint').addEventListener('click', () => window.print());
+$('#btnExport').addEventListener('click', () => {
+  const blob = new Blob([JSON.stringify({exported:new Date().toISOString(), state}, null, 2)], {type:'application/json'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'mep-tracker-progress.json'; a.click(); URL.revokeObjectURL(a.href);
+});
+$('#fileIn').addEventListener('change', async e => {
+  const f = e.target.files[0]; if (!f) return;
+  try { const j = JSON.parse(await f.text()); const s = j.state || j; if (typeof s !== 'object') throw 0;
+    Object.assign(state, s); persist(); render(); } catch(err){ alert('That file is not a tracker export.'); }
+  e.target.value = '';
+});
+$('#btnTheme').addEventListener('click', () => {
+  const r = document.documentElement; const cur = r.getAttribute('data-theme');
+  const sys = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  const next = (cur || sys) === 'dark' ? 'light' : 'dark';
+  r.setAttribute('data-theme', next); try { localStorage.setItem(KEY+'-theme', next); } catch(e){}
+});
+try { const t = localStorage.getItem(KEY+'-theme'); if (t) document.documentElement.setAttribute('data-theme', t); } catch(e){}
+
+load();
+render();
+</script>
+
+</body>
+</html>
