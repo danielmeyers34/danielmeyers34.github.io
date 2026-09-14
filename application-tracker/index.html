@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Job Search Log — Daniel Meyers</title>
+<meta name="description" content="Every application I've sent since late August 2026, what came back, and how long each one has been silent. A public job-search log by Daniel Meyers.">
+<meta property="og:title" content="Job Search Log — 50 applications, in public">
+<meta property="og:type" content="article">
+<meta property="og:description" content="Every application since late August 2026, what came back, and how long each has been silent. Use it as a template for your own search.">
+<meta property="og:image" content="https://danielmeyers34.github.io/application-tracker/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:url" content="https://danielmeyers34.github.io/application-tracker/">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="author" content="Daniel Meyers">
+<meta property="article:author" content="Daniel Meyers">
+<meta property="article:published_time" content="2026-09-14T18:00:00Z">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap">
+<style>
+:root{
+  --ground:#F5F6F4; --surface:#FFFFFF; --ink:#1B2430; --ink-2:#4A5563; --muted:#7A8490;
+  --line:#D9DEE3; --line-2:#EAEDF0; --accent:#2C6A9A; --accent-soft:#E3EEF7;
+  --good:#2C7A5B; --good-soft:#E1F1EA; --warn:#B0741E; --warn-soft:#F8EEDC; --bad:#9A3B3B; --bad-soft:#F6E3E3;
+  --review:#5A5FA8; --review-soft:#E7E7F6;
+  --shadow:0 1px 2px rgba(27,36,48,.06),0 4px 14px rgba(27,36,48,.06);
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --ground:#12171D; --surface:#1A2129; --ink:#E7EBEF; --ink-2:#B8C0C9; --muted:#8A94A0;
+  --line:#2C353F; --line-2:#242C35; --accent:#6FA8D6; --accent-soft:#1E3346;
+  --good:#6CC49A; --good-soft:#1B3328; --warn:#E0A94E; --warn-soft:#3A2D14; --bad:#E08484; --bad-soft:#3B1F1F;
+  --review:#A5A8E6; --review-soft:#282A47;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 14px rgba(0,0,0,.3);
+}}
+:root[data-theme="dark"]{
+  --ground:#12171D; --surface:#1A2129; --ink:#E7EBEF; --ink-2:#B8C0C9; --muted:#8A94A0;
+  --line:#2C353F; --line-2:#242C35; --accent:#6FA8D6; --accent-soft:#1E3346;
+  --good:#6CC49A; --good-soft:#1B3328; --warn:#E0A94E; --warn-soft:#3A2D14; --bad:#E08484; --bad-soft:#3B1F1F;
+  --review:#A5A8E6; --review-soft:#282A47;
+  --shadow:0 1px 2px rgba(0,0,0,.4),0 4px 14px rgba(0,0,0,.3);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);font:15px/1.5 "IBM Plex Sans",system-ui,-apple-system,Segoe UI,sans-serif}
+.mono{font-family:"IBM Plex Mono",ui-monospace,SFMono-Regular,Menlo,monospace}
+a{color:var(--accent)}
+.wrap{max-width:1080px;margin:0 auto;padding:36px 24px 80px}
+header{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px;border-bottom:2px solid var(--ink);padding-bottom:16px}
+h1{margin:0;font-size:26px;font-weight:700;letter-spacing:-.01em;text-wrap:balance}
+.sub{margin:4px 0 0;color:var(--ink-2);max-width:66ch}
+.eyebrow{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);font-weight:600}
+
+.summary{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin:22px 0 10px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:10px 14px}
+.stat .n{font-size:26px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1.1}
+.stat .l{font-size:12px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;margin-top:2px}
+.stat.s-silent .n{color:var(--warn)} .stat.s-rejected .n{color:var(--bad)} .stat.s-screen .n{color:var(--review)} .stat.s-interview .n{color:var(--good)}
+
+.funnel{display:flex;height:14px;border-radius:4px;overflow:hidden;border:1px solid var(--line);margin:0 0 6px}
+.funnel i{display:block;height:100%}
+.funnel .f-silent{background:var(--warn)} .funnel .f-rejected{background:var(--bad)} .funnel .f-screen{background:var(--review)} .funnel .f-interview{background:var(--good)} .funnel .f-withdrawn{background:var(--muted)}
+.legend{display:flex;flex-wrap:wrap;gap:14px;font-size:12px;color:var(--ink-2);margin-bottom:18px}
+.legend span::before{content:"";display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:6px;vertical-align:-1px}
+.legend .f-silent::before{background:var(--warn)} .legend .f-rejected::before{background:var(--bad)} .legend .f-screen::before{background:var(--review)} .legend .f-interview::before{background:var(--good)} .legend .f-withdrawn::before{background:var(--muted)}
+
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:8px 0 18px}
+.toolbar select,.toolbar input{font:inherit;font-size:14px;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:5px;padding:6px 10px}
+.toolbar input{min-width:220px;flex:1}
+.toolbar .spacer{flex:1}
+.hint{font-size:12px;color:var(--muted)}
+
+.group{margin-top:26px}
+.group h2{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-2);margin:0 0 8px;display:flex;align-items:baseline;gap:10px}
+.group h2 .desc{font-weight:400;letter-spacing:0;text-transform:none;font-size:13px;color:var(--muted)}
+.list{background:var(--surface);border:1px solid var(--line);border-radius:8px;box-shadow:var(--shadow);overflow:hidden}
+.row{border-top:1px solid var(--line-2)}
+.row:first-child{border-top:0}
+.head{display:grid;grid-template-columns:22px 1.7fr 84px 1fr auto;gap:12px;align-items:center;padding:12px 14px;cursor:pointer}
+.head:hover{background:color-mix(in srgb,var(--accent-soft) 45%,transparent)}
+.head:focus-visible{outline:2px solid var(--accent);outline-offset:-2px}
+.chev{width:14px;height:14px;color:var(--muted);transition:transform .15s}
+.row.open .chev{transform:rotate(90deg)}
+.name{font-weight:600}
+.name small{display:block;font-weight:400;color:var(--muted);font-size:12px}
+.date{font-size:13px;color:var(--ink-2);white-space:nowrap}
+.wait{display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted);white-space:nowrap}
+.wait .bar{flex:1;height:6px;border-radius:3px;background:var(--line);overflow:hidden;min-width:40px}
+.wait .bar i{display:block;height:100%;background:var(--warn);border-radius:3px}
+.wait.done .bar i{background:var(--line)}
+.pill{font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding:3px 9px;border-radius:999px;white-space:nowrap}
+.pill.silent{background:var(--warn-soft);color:var(--warn)}
+.pill.rejected{background:var(--bad-soft);color:var(--bad)}
+.pill.screen{background:var(--review-soft);color:var(--review)}
+.pill.interview{background:var(--good-soft);color:var(--good)}
+.pill.withdrawn{background:var(--line-2);color:var(--ink-2)}
+.body{display:none;padding:4px 14px 16px 48px;border-top:1px dashed var(--line-2)}
+.row.open .body{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media (max-width:720px){.head{grid-template-columns:22px 1fr auto}.date,.wait{display:none}.row.open .body{grid-template-columns:1fr;padding-left:14px}}
+.field{margin-top:10px}
+.field .lbl{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:600;margin-bottom:4px}
+.field select,.field textarea,.field input{width:100%;font:inherit;font-size:14px;color:var(--ink);background:var(--ground);border:1px solid var(--line);border-radius:5px;padding:7px 9px}
+.field textarea{min-height:80px;resize:vertical;line-height:1.45}
+.meta{font-size:13px;color:var(--ink-2);margin-top:10px}
+.meta b{color:var(--ink)}
+.empty{padding:18px 14px;color:var(--muted);font-size:14px}
+footer{margin-top:36px;font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:12px}
+@media (prefers-reduced-motion:reduce){.chev{transition:none}}
+
+.tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.btn{font:inherit;font-size:13px;font-weight:500;color:var(--ink);background:var(--surface);border:1px solid var(--line);border-radius:5px;padding:6px 11px;cursor:pointer}
+.btn:hover{border-color:var(--accent);color:var(--accent)}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.primary:hover{color:#fff;filter:brightness(1.08)}
+.btn.danger:hover{border-color:var(--bad);color:var(--bad)}
+.fileIn{display:none}
+.note{margin:18px 0 0;padding:14px 16px;background:var(--surface);border:1px solid var(--line);border-radius:8px;max-width:72ch;font-size:14px;color:var(--ink-2)}
+.note p{margin:0 0 8px}.note p:last-child{margin:0}
+.mine{display:inline-block;font-size:11px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--accent);background:var(--accent-soft);padding:2px 7px;border-radius:4px;margin-left:6px;vertical-align:1px}
+dialog{border:1px solid var(--line);border-radius:8px;background:var(--surface);color:var(--ink);padding:18px 20px;max-width:440px;width:calc(100% - 32px);box-shadow:var(--shadow)}
+dialog::backdrop{background:rgba(0,0,0,.35)}
+dialog h3{margin:0 0 6px;font-size:16px}
+dialog .actions{display:flex;justify-content:flex-end;gap:8px;margin-top:14px}
+@media print{.toolbar,.tools,.btn{display:none}.body{display:grid!important}.list{box-shadow:none}.wrap{padding:0}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+<header>
+  <div>
+    <div class="eyebrow">Job search · in public</div>
+    <h1>Job Search Log</h1>
+    <p class="sub">Every application I've sent since late August 2026, what came back, and how long each one has been quiet. Open a row for the details. Want to run your own? Hit <b>Add application</b> — your entries save in this browser only and nothing is uploaded. <a href="#" id="whyLink">Why publish this?</a></p>
+  </div>
+  <div class="tools">
+    <button class="btn" id="btnTheme" type="button" title="Toggle light / dark">Theme</button>
+    <button class="btn" id="btnExport" type="button" title="Download the log as a JSON file">Export</button>
+    <label class="btn" for="fileIn" title="Load a log file">Import</label><input class="fileIn" id="fileIn" type="file" accept="application/json">
+    <button class="btn danger" id="btnReset" type="button" title="Remove your entries and edits">Reset</button>
+    <button class="btn primary" id="btnAdd" type="button">Add application</button>
+  </div>
+</header>
+
+<div id="why" class="note" hidden>
+  <p>Three and a half weeks, about fifty applications, and no conversation with a hiring manager yet. Sending application fifty-one the same way I sent the first fifty doesn't seem like a plan, so this is the different thing: the whole log, in the open, including the silence.</p>
+  <p>Two reasons. First, numbers beat vibes — the bar on each row is how long it's been quiet, and the funnel at the top is the honest shape of a remote IT search right now. Second, if you're searching too, the page is yours: add your own applications, track the wait, export the file. If you're hiring for remote endpoint, identity, or IT operations work, or you've cracked this market recently and know what actually moved the needle, I'd like to hear it. <span style="color:var(--muted)">— Daniel Meyers, <a href="https://www.linkedin.com/in/daniel-meyers-882aa88a" target="_blank" rel="noopener">LinkedIn</a></span></p>
+</div>
+
+<div class="summary" id="summary"></div>
+<div class="funnel" id="funnel" title="Outcome mix"></div>
+<div class="legend"><span class="f-silent">No response yet</span><span class="f-rejected">Rejected</span><span class="f-screen">Screening / recruiter</span><span class="f-interview">Interview</span><span class="f-withdrawn">Withdrawn</span></div>
+
+<div class="toolbar">
+  <input id="q" type="search" placeholder="Search company, role, source…" aria-label="Search">
+  <select id="fStatus" aria-label="Filter by outcome">
+    <option value="">All outcomes</option>
+    <option value="silent">No response yet</option>
+    <option value="rejected">Rejected</option>
+    <option value="screen">Screening / recruiter</option>
+    <option value="interview">Interview</option>
+    <option value="withdrawn">Withdrawn</option>
+  </select>
+  <select id="fWho" aria-label="Whose entries">
+    <option value="">Everyone's entries</option>
+    <option value="daniel">Daniel's log</option>
+    <option value="mine">My entries</option>
+  </select>
+  <span class="spacer"></span>
+  <span class="hint" id="hint"></span>
+</div>
+
+<div id="groups"></div>
+
+<footer>Dates are when the applicant-tracking system confirmed receipt. "Rejected" means a form email; none included feedback. Silence is measured from the application date to today. Companion to the <a href="/mep-tracker/">MEP Contractor Target List</a>. · <a href="https://danielmeyers34.github.io/">danielmeyers34.github.io</a></footer>
+</div>
+
+<dialog id="dlg">
+  <form method="dialog" id="addForm">
+    <h3>Add an application</h3>
+    <div class="field"><div class="lbl">Company</div><input name="company" required autocomplete="off"></div>
+    <div class="field"><div class="lbl">Role</div><input name="role" autocomplete="off"></div>
+    <div class="field"><div class="lbl">Date applied</div><input name="date" type="date" required></div>
+    <div class="field"><div class="lbl">Outcome so far</div>
+      <select name="status"><option value="silent">No response yet</option><option value="rejected">Rejected</option><option value="screen">Screening / recruiter</option><option value="interview">Interview</option><option value="withdrawn">Withdrawn</option></select>
+    </div>
+    <div class="field"><div class="lbl">Source</div><input name="source" placeholder="LinkedIn, Indeed, company site, recruiter…" autocomplete="off"></div>
+    <div class="actions"><button class="btn" value="cancel" type="button" id="dlgCancel">Cancel</button><button class="btn primary" value="ok" type="submit">Add</button></div>
+  </form>
+</dialog>
+
+<script>
+// ----- Daniel's log (ATS confirmation dates, Pacific) -----
+const SEED = [
+  {id:'undisclosed-agency', company:'Undisclosed (staffing agency)', role:'IT Manager (client placement)', date:'2026-08-21', status:'screen', source:'Recruiter', resp:'2026-08-21', note:'20-minute preliminary Teams call with the recruiter and account manager. Nothing since.'},
+  {id:'jobgether', company:'PeoplePartners via Jobgether', role:'IT Systems Support Officer (WFH)', date:'2026-08-23', status:'silent', source:'LinkedIn'},
+  {id:'horizon3', company:'Horizon3.ai', role:'Manager, IT Engineering', date:'2026-08-24', status:'silent', source:'Company site (Ashby)'},
+  {id:'pomelo', company:'Pomelo Care', role:'IT Support Engineer (Remote, West Coast hours)', date:'2026-08-25', status:'silent', source:'Company site (Greenhouse)'},
+  {id:'viz', company:'Viz.ai', role:'Senior IT Specialist', date:'2026-08-25', status:'silent', source:'Welcome to the Jungle'},
+  {id:'nerdio', company:'Nerdio', role:'Technical Training lead', date:'2026-08-26', status:'silent', source:'Company site (Rippling)'},
+  {id:'snowrelic', company:'Snowrelic Inc', role:'IT role (Easy Apply)', date:'2026-08-26', status:'silent', source:'LinkedIn'},
+  {id:'sikich', company:'Sikich', role:'Level 2 Engineer, Legal Vertical', date:'2026-08-26', status:'silent', source:'Welcome to the Jungle (Jobvite)'},
+  {id:'runway', company:'Runway', role:'IT role', date:'2026-08-26', status:'rejected', source:'Company site (Ashby)', resp:'2026-08-28', note:'Form rejection two days later: "decided to move forward with other candidates."'},
+  {id:'virta', company:'Virta Health', role:'IT Engineer', date:'2026-08-26', status:'silent', source:'Company site (Ashby)'},
+  {id:'basecamp', company:'BaseCamp Consulting & Solutions', role:'Cloud System & Platform Engineer', date:'2026-08-27', status:'silent', source:'BambooHR'},
+  {id:'mindrift', company:'Mindrift', role:'Software Engineer – AI Agent Evaluation (freelance)', date:'2026-08-27', status:'rejected', source:'Workable', resp:'2026-08-27', note:'Automated decline the same evening.'},
+  {id:'eng-mgr-it-sec', company:'Undisclosed (Greenhouse)', role:'Engineering Manager – IT & Security', date:'2026-08-27', status:'silent', source:'Company site (Greenhouse)'},
+  {id:'ramp', company:'Ramp', role:'IT Site Specialist', date:'2026-08-28', status:'rejected', source:'Company site (Ashby)', resp:'2026-08-31', note:'Form rejection after three days.'},
+  {id:'formassembly', company:'FormAssembly', role:'Senior Technical Specialist', date:'2026-08-28', status:'silent', source:'Workable'},
+  {id:'st-charles', company:'St. Charles Health System', role:'IT Demand and Portfolio Specialist', date:'2026-08-28', status:'silent', source:'Workday'},
+  {id:'ntt-gdc', company:'NTT Global Data Centers', role:'Specialist, Sourcing – IT & Indirect', date:'2026-08-28', status:'rejected', source:'Workday', resp:'2026-09-13', note:'Form rejection after 16 days.'},
+  {id:'lattice', company:'Lattice', role:'Senior Manager, IT', date:'2026-08-28', status:'silent', source:'Company site (Greenhouse)'},
+  {id:'undisclosed-tech', company:'Undisclosed (tech company)', role:'Senior AI Enablement Specialist', date:'2026-08-30', status:'screen', source:'Company site (Ashby)', resp:'2026-09-08', note:'Invited to an automated Glider screening session nine days in. Reminder sent Sep 12. Still no human contact.'},
+  {id:'franklin-fitch', company:'Franklin Fitch', role:'IT role (agency)', date:'2026-08-30', status:'silent', source:'LinkedIn'},
+  {id:'applause', company:'Applause', role:'AI Solutions Engineer', date:'2026-08-30', status:'silent', source:'LinkedIn + Workable'},
+  {id:'litmus7', company:'Litmus7', role:'IT role (Easy Apply)', date:'2026-08-30', status:'silent', source:'LinkedIn'},
+  {id:'cypress-hcm', company:'Cypress HCM', role:'IT role (agency)', date:'2026-08-30', status:'silent', source:'LinkedIn'},
+  {id:'tines', company:'Tines', role:'Senior IT Operations Technician', date:'2026-08-30', status:'silent', source:'Company site (Greenhouse)', note:'Re-submitted Sep 11 with a tailored resume.'},
+  {id:'posit', company:'Posit (RStudio)', role:'Senior IT Engineer', date:'2026-08-31', status:'rejected', source:'Company site (Greenhouse)', resp:'2026-09-11', note:'My strongest technical fit on the list. Form rejection after 11 days.'},
+  {id:'coinbase', company:'Coinbase', role:'Senior IT Support Engineer, IT Tooling', date:'2026-08-31', status:'silent', source:'Company site (Greenhouse)'},
+  {id:'afs', company:'Accenture Federal Services', role:'Microsoft Intune Architect', date:'2026-08-31', status:'silent', source:'Company site'},
+  {id:'leidos', company:'Leidos', role:'Systems Engineer – M365 Security & Compliance (GCC)', date:'2026-08-31', status:'silent', source:'Workday'},
+  {id:'nscale', company:'Nscale', role:'Endpoint Engineer', date:'2026-08-31', status:'silent', source:'Company site (Greenhouse)'},
+  {id:'ecs', company:'ECS Federal', role:'Endpoint Engineer III', date:'2026-08-31', status:'silent', source:'ADP'},
+  {id:'figma', company:'Figma', role:'Support Engineer, Content Systems', date:'2026-08-31', status:'silent', source:'Company site'},
+  {id:'apetan', company:'Apetan Consulting', role:'IT role (agency)', date:'2026-09-01', status:'silent', source:'LinkedIn'},
+  {id:'lyric', company:'Lyric', role:'IT role', date:'2026-09-02', status:'silent', source:'Workday'},
+  {id:'carports', company:'Carports Anywhere', role:'IT Specialist', date:'2026-09-02', status:'silent', source:'Indeed (CareerPlug)'},
+  {id:'indeed-sysadmin', company:'Undisclosed (Indeed)', role:'System Administrator (Infrastructure & Operations)', date:'2026-09-02', status:'silent', source:'Indeed'},
+  {id:'applied-systems', company:'Applied Systems', role:'System Administrator', date:'2026-09-03', status:'silent', source:'Company site (iCIMS)'},
+  {id:'bridgeway', company:'Bridgeway Benefit Technologies', role:'System Administrator', date:'2026-09-03', status:'rejected', source:'Company site (Greenhouse)', resp:'2026-09-04', note:'Form rejection the next day.'},
+  {id:'undisclosed-public', company:'Undisclosed (public-sector client via staffing firm)', role:'Cloud Azure / Identity Engineer (contract)', date:'2026-09-03', status:'screen', source:'Recruiter', resp:'2026-09-09', note:'Two recruiter calls, resume and references submitted. Waiting on the client.'},
+  {id:'hiddenlayer', company:'HiddenLayer', role:'IT role', date:'2026-09-08', status:'silent', source:'LinkedIn + Greenhouse'},
+  {id:'voxel', company:'Voxel', role:'Tier 2 Support Engineer', date:'2026-09-08', status:'silent', source:'Company site (Ashby)'},
+  {id:'facet', company:'Facet', role:'Technology Operations Support Analyst', date:'2026-09-08', status:'silent', source:'Workable'},
+  {id:'suite-420', company:'Suite 420 Solutions', role:'IT role (Easy Apply)', date:'2026-09-10', status:'silent', source:'LinkedIn'},
+  {id:'tempo', company:'Tempo Software', role:'Endpoint and Device Specialist', date:'2026-09-11', status:'silent', source:'Company site (Ashby)'},
+  {id:'zeektek', company:'Zeektek', role:'IT role (agency)', date:'2026-09-11', status:'silent', source:'LinkedIn', note:'LinkedIn says the application was viewed.'},
+  {id:'undisclosed-gig', company:'Undisclosed (LinkedIn listing)', role:'IT Systems Administrator ($60/hr remote)', date:'2026-09-11', status:'withdrawn', source:'LinkedIn', note:'Turned out to be gig piecework for AI-training platforms, not a role.'},
+  {id:'assured', company:'Assured', role:'Senior IT Support Engineer', date:'2026-09-11', status:'rejected', source:'Company site (Ashby)', resp:'2026-09-14', note:'Form rejection after three days.'},
+  {id:'1password', company:'1Password', role:'Senior IT Support Engineer', date:'2026-09-11', status:'silent', source:'Company site'},
+  {id:'pixel-machinery', company:'Pixel Machinery', role:'Senior IT Implementation Technician', date:'2026-09-11', status:'silent', source:'Workable'},
+  {id:'recology', company:'Recology', role:'Senior Systems Administrator (Sacramento hybrid)', date:'2026-09-11', status:'silent', source:'Indeed'},
+  {id:'super-dispatch', company:'Super Dispatch', role:'Remote Customer Support Specialist', date:'2026-09-12', status:'silent', source:'Company site'},
+];
+const STATUS = {silent:'No response yet', rejected:'Rejected', screen:'Screening / recruiter', interview:'Interview', withdrawn:'Withdrawn'};
+const ORDER = ['silent','rejected','screen','interview','withdrawn'];
+
+// ----- persistence (this browser only) -----
+const KEY = 'application-tracker-v1';
+let user = {mine:[], edits:{}};   // mine: [{...}], edits: id -> {status, note, resp}
+let openId = null;
+const $ = s => document.querySelector(s);
+function load(){ try { const raw = localStorage.getItem(KEY); if (raw) user = Object.assign({mine:[],edits:{}}, JSON.parse(raw)); } catch(e){} }
+function persist(){ try { localStorage.setItem(KEY, JSON.stringify(user)); } catch(e){} }
+
+function all(){
+  const seed = SEED.map(s => ({...s, ...(user.edits[s.id]||{}), who:'daniel'}));
+  const mine = user.mine.map(m => ({...m, who:'mine'}));
+  return seed.concat(mine);
+}
+const DAY = 86400000;
+const today = () => { const d = new Date(); d.setHours(0,0,0,0); return d; };
+function days(from, to){ return Math.max(0, Math.round((to - new Date(from+'T00:00:00')) / DAY)); }
+function fmt(d){ return new Date(d+'T00:00:00').toLocaleDateString(undefined,{month:'short',day:'numeric'}); }
+function esc(s){return String(s||'').replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
+
+function render(){
+  const q = $('#q').value.trim().toLowerCase();
+  const fs = $('#fStatus').value, fw = $('#fWho').value;
+  const rows = all();
+  const scope = fw ? rows.filter(r => r.who===fw) : rows;
+
+  const counts = {silent:0,rejected:0,screen:0,interview:0,withdrawn:0};
+  scope.forEach(r => counts[r.status]++);
+  const total = scope.length;
+  const maxWait = Math.max(1, ...scope.map(r => days(r.date, today())));
+  const silentWaits = scope.filter(r => r.status==='silent').map(r => days(r.date, today()));
+  const avgSilent = silentWaits.length ? Math.round(silentWaits.reduce((a,b)=>a+b,0)/silentWaits.length) : 0;
+  $('#summary').innerHTML = [
+    ['all', total, 'Applications'],
+    ['silent', counts.silent, 'No response'],
+    ['rejected', counts.rejected, 'Rejected'],
+    ['screen', counts.screen, 'Screening'],
+    ['interview', counts.interview, 'Interviews'],
+    ['wait', avgSilent+'d', 'Avg. silence'],
+  ].map(([k,n,l]) => `<div class="stat s-${k}"><div class="n">${n}</div><div class="l">${l}</div></div>`).join('');
+  $('#funnel').innerHTML = total ? ORDER.map(k => counts[k] ? `<i class="f-${k}" style="width:${counts[k]/total*100}%" title="${STATUS[k]}: ${counts[k]}"></i>` : '').join('') : '';
+
+  const shown = scope.filter(r => {
+    if (fs && r.status !== fs) return false;
+    if (q && !(r.company+' '+r.role+' '+(r.source||'')+' '+(r.note||'')).toLowerCase().includes(q)) return false;
+    return true;
+  }).sort((a,b) => b.date.localeCompare(a.date));
+  $('#hint').textContent = `${shown.length} of ${total} applications`;
+
+  // group by week
+  const weeks = {};
+  for (const r of shown){
+    const d = new Date(r.date+'T00:00:00'); const dow = (d.getDay()+6)%7; d.setDate(d.getDate()-dow);
+    const k = d.toISOString().slice(0,10); (weeks[k] = weeks[k]||[]).push(r);
+  }
+  const out = [];
+  for (const wk of Object.keys(weeks).sort().reverse()){
+    const items = weeks[wk];
+    const end = new Date(wk+'T00:00:00'); end.setDate(end.getDate()+6);
+    out.push(`<section class="group"><h2>Week of ${fmt(wk)}<span class="desc">${items.length} application${items.length===1?'':'s'}</span></h2><div class="list">`);
+    for (const r of items){
+      const waited = r.status==='silent' ? days(r.date, today()) : (r.resp ? days(r.date, new Date(r.resp+'T00:00:00')) : days(r.date, today()));
+      const done = r.status!=='silent';
+      const label = r.status==='silent' ? `${waited}d quiet` : (r.resp ? `${waited}d to reply` : '');
+      out.push(`<div class="row ${openId===r.id?'open':''}" data-id="${esc(r.id)}" data-who="${r.who}">
+        <div class="head" tabindex="0" role="button" aria-expanded="${openId===r.id}">
+          <svg class="chev" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 3l5 5-5 5"/></svg>
+          <div class="name">${esc(r.company)}${r.who==='mine'?'<span class="mine">Mine</span>':''}<small>${esc(r.role||'')}${r.source?' · '+esc(r.source):''}</small></div>
+          <div class="date mono">${fmt(r.date)}</div>
+          <div class="wait ${done?'done':''}"><span class="bar"><i style="width:${Math.round(waited/maxWait*100)}%"></i></span>${label}</div>
+          <span class="pill ${r.status}">${STATUS[r.status]}</span>
+        </div>
+        <div class="body">
+          <div>
+            <div class="meta"><b>Applied</b> ${fmt(r.date)}${r.resp?` · <b>Heard back</b> ${fmt(r.resp)} (${days(r.date,new Date(r.resp+'T00:00:00'))} days)`:` · <b>Quiet for</b> ${days(r.date,today())} days`}</div>
+            ${r.source?`<div class="meta"><b>Source</b> ${esc(r.source)}</div>`:''}
+            <div class="field"><div class="lbl">Notes</div><textarea data-note placeholder="What came back, who you talked to, what you'd do differently…">${esc(r.note||'')}</textarea></div>
+          </div>
+          <div>
+            <div class="field"><div class="lbl">Outcome</div>
+              <select data-status>${ORDER.map(k => `<option value="${k}" ${r.status===k?'selected':''}>${STATUS[k]}</option>`).join('')}</select>
+            </div>
+            <div class="field"><div class="lbl">Date of response (if any)</div><input type="date" data-resp value="${esc(r.resp||'')}"></div>
+            ${r.who==='mine'?`<div class="field"><button class="btn danger" type="button" data-remove>Remove this entry</button></div>`:`<div class="meta" style="color:var(--muted)">Edits to Daniel's rows stay in your browser.</div>`}
+          </div>
+        </div>
+      </div>`);
+    }
+    out.push('</div></section>');
+  }
+  $('#groups').innerHTML = out.length ? out.join('') : '<div class="list"><div class="empty">Nothing matches that filter.</div></div>';
+}
+
+function patch(id, who, p){
+  if (who==='mine'){ const m = user.mine.find(x => x.id===id); if (m) Object.assign(m, p); }
+  else user.edits[id] = Object.assign(user.edits[id]||{}, p);
+  persist(); render();
+}
+const timers = {};
+document.addEventListener('click', e => {
+  const head = e.target.closest('.head');
+  if (head && !e.target.closest('a')){ const id = head.parentElement.dataset.id; openId = openId===id ? null : id; render(); return; }
+  if (e.target.dataset.remove !== undefined){
+    const row = e.target.closest('.row'); user.mine = user.mine.filter(x => x.id!==row.dataset.id); openId=null; persist(); render();
+  }
+});
+document.addEventListener('keydown', e => {
+  if ((e.key==='Enter'||e.key===' ') && e.target.classList.contains('head')){ e.preventDefault(); e.target.click(); }
+});
+document.addEventListener('change', e => {
+  const row = e.target.closest('.row'); if (!row) return; const id = row.dataset.id, who = row.dataset.who;
+  if (e.target.dataset.status !== undefined) patch(id, who, {status:e.target.value});
+  else if (e.target.dataset.resp !== undefined) patch(id, who, {resp:e.target.value||undefined});
+});
+document.addEventListener('input', e => {
+  if (e.target.dataset.note !== undefined){
+    const row = e.target.closest('.row'); const id=row.dataset.id, who=row.dataset.who, v=e.target.value;
+    clearTimeout(timers[id]); timers[id] = setTimeout(() => {
+      if (who==='mine'){ const m=user.mine.find(x=>x.id===id); if(m) m.note=v; } else user.edits[id] = Object.assign(user.edits[id]||{}, {note:v});
+      persist();
+    }, 500);
+  }
+  if (e.target.id==='q') render();
+});
+$('#fStatus').addEventListener('change', render); $('#fWho').addEventListener('change', render);
+$('#whyLink').addEventListener('click', e => { e.preventDefault(); $('#why').hidden = !$('#why').hidden; });
+
+// add dialog
+const dlg = $('#dlg');
+$('#btnAdd').addEventListener('click', () => { const f=$('#addForm'); f.reset(); f.date.value = new Date().toISOString().slice(0,10); dlg.showModal(); });
+$('#dlgCancel').addEventListener('click', () => dlg.close());
+$('#addForm').addEventListener('submit', e => {
+  e.preventDefault(); const f = e.target;
+  const id = 'mine-'+Date.now().toString(36);
+  user.mine.push({id, company:f.company.value.trim(), role:f.role.value.trim(), date:f.date.value, status:f.status.value, source:f.source.value.trim()});
+  persist(); openId = id; dlg.close(); $('#fWho').value=''; render();
+});
+
+$('#btnExport').addEventListener('click', () => {
+  const blob = new Blob([JSON.stringify({exported:new Date().toISOString(), entries: all()}, null, 2)], {type:'application/json'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'job-search-log.json'; a.click(); URL.revokeObjectURL(a.href);
+});
+$('#fileIn').addEventListener('change', async e => {
+  const f = e.target.files[0]; if (!f) return;
+  try { const j = JSON.parse(await f.text()); const entries = j.entries || j;
+    if (!Array.isArray(entries)) throw 0;
+    for (const en of entries){
+      if (!en.company || !en.date) continue;
+      if (en.who==='daniel' && SEED.some(s=>s.id===en.id)){ user.edits[en.id] = {status:en.status, note:en.note, resp:en.resp}; }
+      else if (!user.mine.some(m=>m.id===en.id)) user.mine.push({id:en.id||('mine-'+Math.random().toString(36).slice(2)), company:en.company, role:en.role||'', date:en.date, status:STATUS[en.status]?en.status:'silent', source:en.source||'', note:en.note||'', resp:en.resp});
+    }
+    persist(); render(); } catch(err){ alert('That file is not a job-search log export.'); }
+  e.target.value = '';
+});
+$('#btnReset').addEventListener('click', () => {
+  if (!confirm('Remove your entries and any edits you made to Daniel\'s rows? This only affects this browser.')) return;
+  user = {mine:[], edits:{}}; persist(); render();
+});
+$('#btnTheme').addEventListener('click', () => {
+  const r = document.documentElement; const cur = r.getAttribute('data-theme');
+  const sys = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  const next = (cur || sys) === 'dark' ? 'light' : 'dark';
+  r.setAttribute('data-theme', next); try { localStorage.setItem(KEY+'-theme', next); } catch(e){}
+});
+try { const t = localStorage.getItem(KEY+'-theme'); if (t) document.documentElement.setAttribute('data-theme', t); } catch(e){}
+
+load();
+render();
+</script>
+
+</body>
+</html>
