@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Job Search Log — Daniel Meyers</title>
 <meta name="description" content="Every application I've sent since late August 2026, what came back, and how long each one has been silent. A public job-search log by Daniel Meyers.">
-<meta property="og:title" content="Job Search Log — 50 applications, in public">
+<meta property="og:title" content="Job Search Log — 97 applications, in public">
 <meta property="og:type" content="article">
 <meta property="og:description" content="Every application since late August 2026, what came back, and how long each has been silent. Use it as a template for your own search.">
 <meta property="og:image" content="https://danielmeyers34.github.io/application-tracker/og-image.png">
@@ -222,7 +222,7 @@ const SEED = [
   {id:'ecs', company:'ECS Federal', role:'Endpoint Engineer III', date:'2026-08-31', status:'silent', source:'ADP'},
   {id:'figma', company:'Figma', role:'Support Engineer, Content Systems', date:'2026-08-31', status:'silent', source:'Company site'},
   {id:'apetan', company:'Apetan Consulting', role:'IT role (agency)', date:'2026-09-01', status:'silent', source:'LinkedIn'},
-  {id:'lyric', company:'Lyric', role:'IT role', date:'2026-09-02', status:'silent', source:'Workday'},
+  {id:'lyric', company:'Lyric', role:'Senior Manager, Corporate IT', date:'2026-09-02', status:'rejected', source:'Workday', resp:'2026-09-24', note:'Form rejection after 22 days.'},
   {id:'carports', company:'Carports Anywhere', role:'IT Specialist', date:'2026-09-02', status:'silent', source:'Indeed (CareerPlug)'},
   {id:'indeed-sysadmin', company:'Undisclosed (Indeed)', role:'System Administrator (Infrastructure & Operations)', date:'2026-09-02', status:'silent', source:'Indeed'},
   {id:'applied-systems', company:'Applied Systems', role:'System Administrator', date:'2026-09-03', status:'silent', source:'Company site (iCIMS)'},
@@ -238,7 +238,7 @@ const SEED = [
   {id:'assured', company:'Assured', role:'Senior IT Support Engineer', date:'2026-09-11', status:'rejected', source:'Company site (Ashby)', resp:'2026-09-14', note:'Form rejection after three days.'},
   {id:'1password', company:'1Password', role:'Senior IT Support Engineer', date:'2026-09-11', status:'silent', source:'Company site'},
   {id:'pixel-machinery', company:'Pixel Machinery', role:'Senior IT Implementation Technician', date:'2026-09-11', status:'silent', source:'Workable'},
-  {id:'recology', company:'Recology', role:'Senior Systems Administrator (Sacramento hybrid)', date:'2026-09-11', status:'screen', source:'Indeed', resp:'2026-09-23', note:'Recruiter invited me to a phone interview (listed as Senior Cloud Systems Administrator). Booked for Sep 28.'},
+  {id:'recology', company:'Recology', role:'Senior Systems Administrator (Sacramento hybrid)', date:'2026-09-11', status:'screen', source:'Indeed', resp:'2026-09-23', note:'Recruiter invited me to a phone interview (listed as Senior Cloud Systems Administrator). Teams interview booked for Mon Sep 28.'},
   {id:'super-dispatch', company:'Super Dispatch', role:'Remote Customer Support Specialist', date:'2026-09-12', status:'silent', source:'Company site'},
   {id:'undisclosed-servicedesk', company:'Undisclosed (client via staffing firm)', role:'Service Desk Manager (Rancho Cordova onsite)', date:'2026-09-23', status:'rejected', source:'Recruiter', resp:'2026-09-24', note:'Client wanted more service desk management experience.'},
   {id:'undisclosed-integration-pm', company:'Undisclosed (client via staffing firm)', role:'IT Integration Project Manager (contract)', date:'2026-09-23', status:'silent', source:'Recruiter'},
@@ -253,6 +253,40 @@ const SEED = [
   {id:'flex', company:'Flex', role:'Senior IT & Corporate Engineering', date:'2026-09-24', status:'silent', source:'Company site (Lever)'},
   {id:'home-depot', company:'The Home Depot', role:'Cybersecurity Senior Engineer – Non-Human Identity (Remote)', date:'2026-09-24', status:'silent', source:'Company site (Workday)'},
   {id:'good-shepherd', company:'Good Shepherd Health Care', role:'Senior Infrastructure Engineer (Remote)', date:'2026-09-24', status:'silent', source:'Indeed'},
+  {id:'penn-mutual', company:'Penn Mutual', role:'Staff M365 Engineer', date:'2026-09-15', status:'silent', source:'Workday'},
+  {id:'planet-tech', company:'Planet Technologies', role:'Office 365 Managed Services Consultant', date:'2026-09-15', status:'silent', source:'Company site (Lever)'},
+  {id:'actionet-server', company:'ActioNet', role:'Server Administrator', date:'2026-09-15', status:'silent', source:'Company site (Jobvite)'},
+  {id:'actionet-azure', company:'ActioNet', role:'Windows/Azure Engineer', date:'2026-09-15', status:'silent', source:'Company site (Jobvite)'},
+  {id:'concept-solutions', company:'Concept Solutions', role:'Microsoft 365 Tier 3 Support Engineer', date:'2026-09-18', status:'silent', source:'Paylocity'},
+  {id:'booker-dimaio', company:'Booker DiMaio', role:'Senior SharePoint / Microsoft 365 Administrator', date:'2026-09-18', status:'silent', source:'JazzHR'},
+  {id:'undisclosed-uem', company:'Undisclosed (logistics company)', role:'Technical Lead, End User Services (UEM)', date:'2026-09-18', status:'screen', source:'Workday', resp:'2026-09-25', note:'Invited to a short written screening, due Sep 28.'},
+  {id:'telecare', company:'Telecare', role:'Senior Cloud Systems Engineer', date:'2026-09-18', status:'silent', source:'Company site'},
+  {id:'boulevard', company:'Boulevard', role:'Lead IT Systems Engineer', date:'2026-09-18', status:'silent', source:'Company site (Greenhouse)'},
+  {id:'reviverx', company:'ReviveRX', role:'Systems Engineer', date:'2026-09-18', status:'silent', source:'Company site (Lever)'},
+  {id:'flexport-it', company:'Flexport', role:'Senior IT Systems Engineer', date:'2026-09-18', status:'silent', source:'Company site (Greenhouse)'},
+  {id:'flexport-iam', company:'Flexport', role:'Senior Systems Engineer (Identity and Access)', date:'2026-09-18', status:'silent', source:'Company site (Greenhouse)'},
+  {id:'my-it-crew', company:'My IT Crew', role:'Senior IT Support Engineer (Remote)', date:'2026-09-18', status:'silent', source:'BambooHR'},
+  {id:'undisclosed-mwe', company:'Undisclosed (agency posting)', role:'Modern Workplace Engineer', date:'2026-09-18', status:'silent', source:'JazzHR'},
+  {id:'bma', company:'BMA Technical Services', role:'Systems Administrator – Senior (Okta)', date:'2026-09-21', status:'silent', source:'Paycom'},
+  {id:'live-nation', company:'Live Nation', role:'Lead Microsoft 365 Engineer', date:'2026-09-21', status:'silent', source:'Workday'},
+  {id:'1password-staff', company:'1Password', role:'Staff IT Engineer', date:'2026-09-21', status:'silent', source:'Company site (Ashby)'},
+  {id:'onebrief', company:'Onebrief', role:'Senior Corporate Security Systems Engineer', date:'2026-09-21', status:'silent', source:'Company site (Ashby)'},
+  {id:'inductive', company:'Inductive Automation', role:'Senior System Administrator (Endpoint & SaaS)', date:'2026-09-21', status:'silent', source:'Company site (Ashby)'},
+  {id:'bicloud', company:'BICloud Tech', role:'Cloud Solution Architect – Modern Work (M365)', date:'2026-09-22', status:'silent', source:'Wellfound'},
+  {id:'butcher', company:'Butcher Power Products', role:'Senior Cloud Engineer', date:'2026-09-22', status:'rejected', source:'Gem', resp:'2026-09-22', note:'Form rejection the same afternoon.'},
+  {id:'govstar', company:'GovStar', role:'Cloud DevOps Engineer', date:'2026-09-22', status:'rejected', source:'Wellfound', resp:'2026-09-23', note:'Declined the next day.'},
+  {id:'undisclosed-desktop', company:'Undisclosed (client via staffing firm)', role:'Desktop Support II (Rancho Cordova onsite, contract)', date:'2026-09-24', status:'screen', source:'Recruiter', resp:'2026-09-24', note:'Recruiter call same day, right-to-represent signed. A second vendor pitched the same req a day later; declined it.'},
+  {id:'clarivate', company:'Clarivate', role:'Lead Infrastructure Engineer (Exchange, Entra, Intune & M365)', date:'2026-09-24', status:'silent', source:'Workday'},
+  {id:'springline', company:'Springline Advisory', role:'Microsoft 365 / Azure Engineer', date:'2026-09-24', status:'silent', source:'Company site (UKG)'},
+  {id:'yum', company:'Yum! Brands', role:'Cyber Security Sr Engineer II (Entra ID / IAM)', date:'2026-09-24', status:'silent', source:'Company site (Oracle)'},
+  {id:'caci', company:'CACI', role:'Security Engineer', date:'2026-09-24', status:'silent', source:'Company site'},
+  {id:'truv', company:'Truv', role:'Lead Technical Support Engineer', date:'2026-09-24', status:'silent', source:'Company site (Lever)'},
+  {id:'nooks', company:'Nooks', role:'Technical Support Engineer – PST', date:'2026-09-24', status:'silent', source:'Company site (Ashby)'},
+  {id:'nikon-slm', company:'Nikon SLM Solutions', role:'IT Senior Systems Engineer', date:'2026-09-24', status:'silent', source:'Company site'},
+  {id:'synack', company:'Synack', role:'IT role', date:'2026-09-24', status:'silent', source:'Company site'},
+  {id:'ea-risk', company:'EA Risk', role:'IT role', date:'2026-09-24', status:'silent', source:'JazzHR'},
+  {id:'indeed-infosec-mgr', company:'Undisclosed (Indeed)', role:'Manager, Information Security', date:'2026-09-24', status:'silent', source:'Indeed'},
+  {id:'indeed-itsec-mgr', company:'Undisclosed (Indeed)', role:'Senior IT and Security Manager', date:'2026-09-24', status:'silent', source:'Indeed'},
 ];
 const STATUS = {silent:'No response yet', rejected:'Rejected', screen:'Screening / recruiter', interview:'Interview', withdrawn:'Withdrawn'};
 const ORDER = ['silent','rejected','screen','interview','withdrawn'];
