@@ -242,7 +242,7 @@ const SEED = [
   {id:'super-dispatch', company:'Super Dispatch', role:'Remote Customer Support Specialist', date:'2026-09-12', status:'silent', source:'Company site'},
   {id:'undisclosed-servicedesk', company:'Undisclosed (client via staffing firm)', role:'Service Desk Manager (Rancho Cordova onsite)', date:'2026-09-23', status:'rejected', source:'Recruiter', resp:'2026-09-24', note:'Client wanted more service desk management experience.'},
   {id:'undisclosed-integration-pm', company:'Undisclosed (client via staffing firm)', role:'IT Integration Project Manager (contract)', date:'2026-09-23', status:'silent', source:'Recruiter'},
-  {id:'swinerton', company:'Swinerton', role:'National Manager, Infrastructure & Operations', date:'2026-09-23', status:'silent', source:'Company site (Workday)'},
+  {id:'swinerton', company:'Swinerton', role:'National Manager, Infrastructure & Operations', date:'2026-09-23', status:'rejected', source:'Company site (Workday)', resp:'2026-10-01', note:'Workday form rejection: decided to move forward with other candidates.'},
   {id:'expel', company:'Expel', role:'Systems Engineer', date:'2026-09-24', status:'silent', source:'Company site'},
   {id:'playlist', company:'Playlist', role:'IT Engineer III – Endpoint Management (Jamf & Intune)', date:'2026-09-24', status:'silent', source:'Company site (Greenhouse)', note:'LinkedIn outreach to the hiring team sent Sep 25; follow up ~Oct 2.'},
   {id:'atlas-technica', company:'Atlas Technica', role:'Sr. Systems Engineer (West Coast)', date:'2026-09-24', status:'silent', source:'Indeed', note:'LinkedIn outreach to the hiring team sent Sep 25; follow up ~Oct 2.'},
@@ -317,7 +317,7 @@ const SEED = [
   {id:'terabase-dir', company:'Terabase Energy', role:'Director, Corporate IT', date:'2026-09-29', status:'silent', source:'Workable'},
   {id:'emergence', company:'Emergence Software', role:'Director of IT', date:'2026-09-29', status:'silent', source:'Company site (Ashby)'},
   {id:'undisclosed-helpdesk-remote', company:'Undisclosed (client via staffing firm)', role:'Helpdesk Support Engineer (remote, contract)', date:'2026-09-29', status:'screen', source:'Recruiter', resp:'2026-09-29', note:'Recruiter call, then I confirmed the rate and sent my resume for submission the same day.'},
-  {id:'mark-iii-ai', company:'Mark III Construction', role:'Director of AI', date:'2026-09-29', status:'silent', source:'Workable'},
+  {id:'mark-iii-ai', company:'Mark III Construction', role:'Director of AI', date:'2026-09-29', status:'rejected', source:'Workable', resp:'2026-09-29', note:'Declined by email from the recruiter the same day.'},
   {id:'pavion-sysadmin', company:'Pavion', role:'Sr System Administrator (Remote)', date:'2026-09-29', status:'silent', source:'Indeed'},
   {id:'sf-bay-coffee-it', company:'San Francisco Bay Coffee', role:'Director of Information Technology (Lincoln, CA)', date:'2026-09-29', status:'silent', source:'Indeed'},
   {id:'magna-cloud', company:'Magna Legal Services', role:'Senior Cloud Solutions Architect & Systems Engineer (Remote)', date:'2026-09-29', status:'silent', source:'Indeed'},
@@ -326,7 +326,7 @@ const SEED = [
   {id:'epic-kids', company:'Epic Kids', role:'IT Systems Administrator', date:'2026-09-29', status:'silent', source:'Company site (Greenhouse)'},
   {id:'1password-3', company:'1Password', role:'IT role', date:'2026-09-29', status:'silent', source:'Company site (Ashby)'},
   {id:'capradio', company:'CapRadio', role:'IT Operations Specialist', date:'2026-09-29', status:'rejected', source:'Paylocity', resp:'2026-09-30', note:'Form rejection sent under a "Thank you for Applying" subject: "chosen to proceed with other candidates."'},
-  {id:'placer-county-network', company:'Placer County', role:'Information Technology Analyst – Senior (Network Engineer, Auburn onsite)', date:'2026-09-30', status:'silent', source:'Company site (JobAps)', note:'County civil-service exam: ranked by the supplemental questionnaire. Open until filled.'},
+  {id:'placer-county-network', company:'Placer County', role:'Information Technology Analyst – Senior (Network Engineer, Auburn onsite)', date:'2026-09-30', status:'screen', source:'Company site (JobAps)', resp:'2026-10-01', note:'County civil-service exam: passed and placed on the eligible list (Oct 1). Hiring departments interview from the list.'},
   {id:'placer-county-sheriff-itm', company:'Placer County Sheriff', role:'Information Technology Manager (Auburn onsite)', date:'2026-09-30', status:'silent', source:'Company site (JobAps)', note:'County management role; written supplemental questions go to the hiring panel. Open until filled.'},
   {id:'horizon3-sr-itse', company:'Horizon3.ai', role:'Senior IT Systems Engineer', date:'2026-09-30', status:'silent', source:'Company site (Ashby)', note:'Second Horizon3 application, this time the hands-on engineer role. Auto-confirmation received.'},
   {id:'penumbra-sr-sysadmin', company:'Penumbra', role:'Sr. Systems Administrator', date:'2026-09-30', status:'silent', source:'Company site (Lever)', note:'Medical device maker; tailored resume and cover letter. Auto-confirmation received.'},
@@ -341,7 +341,8 @@ const SEED = [
   {id:'distantjob-l3-sys-eng', company:'DistantJob (MSP client)', role:'Level 3 IT Systems Engineer', date:'2026-09-30', status:'silent', source:'Greenhouse', note:'Remote MSP infrastructure role: Windows Server, VMware, firewalls, RMM, Azure.'},
   {id:'ondo-it-eng', company:'Ondo Finance', role:'IT Engineer', date:'2026-09-30', status:'silent', source:'Greenhouse', note:'Remote fintech, Okta and Google Workspace identity. Posted as a junior role; no salary listed.'},
   {id:'alteryx-lead-cloud', company:'Alteryx', role:'Lead Cloud Infrastructure Engineer (Remote)', date:'2026-09-30', status:'silent', source:'Welcome to the Jungle (Workday)', note:'Workday req R12481; $160–185K base + 15% target bonus. Generic cloud-platform lead posting with no named cloud.'},
-  {id:'datagrail-itbsm', company:'DataGrail', role:'IT & Business Systems Manager (Remote)', date:'2026-09-30', status:'silent', source:'Welcome to the Jungle (Greenhouse)', note:'Sole IT and business-systems owner reporting to the VP of Engineering; $130–175K + equity. Tailored resume, cover letter and AI-automation essay.'}
+  {id:'datagrail-itbsm', company:'DataGrail', role:'IT & Business Systems Manager (Remote)', date:'2026-09-30', status:'silent', source:'Welcome to the Jungle (Greenhouse)', note:'Sole IT and business-systems owner reporting to the VP of Engineering; $130–175K + equity. Tailored resume, cover letter and AI-automation essay.'},
+  {id:'guild-ai-enablement', company:'Guild Mortgage', role:'AI Training & Enablement Specialist (Remote)', date:'2026-10-01', status:'silent', source:'Indeed', note:'REQ AITRA018532; $82.5–118.3K. Enablement role: Copilot and AI rollouts, training content, knowledge base. Tailored enablement resume.'}
 ];
 const STATUS = {silent:'No response yet', rejected:'Rejected', screen:'Screening / recruiter', interview:'Interview', withdrawn:'Withdrawn'};
 const ORDER = ['silent','rejected','screen','interview','withdrawn'];
